@@ -52,6 +52,19 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// AI Studio specific colors
+				'sidebar-bg': 'hsl(var(--sidebar-bg))',
+				'sidebar-hover': 'hsl(var(--sidebar-hover))',
+				'sidebar-active': 'hsl(var(--sidebar-active))',
+				'sidebar-text': 'hsl(var(--sidebar-text))',
+				'sidebar-text-muted': 'hsl(var(--sidebar-text-muted))',
+				'chat-bg': 'hsl(var(--chat-bg))',
+				'prompt-bg': 'hsl(var(--prompt-bg))',
+				'settings-bg': 'hsl(var(--settings-bg))',
+				'brand-blue': 'hsl(var(--brand-blue))',
+				'brand-blue-light': 'hsl(var(--brand-blue-light))',
+				'brand-gray': 'hsl(var(--brand-gray))',
+				'brand-gray-light': 'hsl(var(--brand-gray-light))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
