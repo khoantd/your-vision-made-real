@@ -5,7 +5,7 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
   { icon: MessageSquare, label: "Chat", view: "chat" },
   { icon: Radio, label: "Stream", view: "stream" },
   { icon: Image, label: "Generate Media", view: "generate-media" },
-  { icon: Hammer, label: "Build" },
+  { icon: Hammer, label: "Build", view: "build" },
   { icon: History, label: "History", hasDropdown: true },
 ];
 
