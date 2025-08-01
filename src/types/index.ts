@@ -1,4 +1,4 @@
-export type ViewType = "chat" | "stream" | "generate-media" | "build";
+export type ViewType = "chat" | "stream" | "generate-media" | "build" | "history";
 
 export interface NavigationItem {
   icon: React.ComponentType<{ className?: string }>;

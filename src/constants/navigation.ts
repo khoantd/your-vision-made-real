@@ -6,7 +6,7 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
   { icon: Radio, label: "Stream", view: "stream" },
   { icon: Image, label: "Generate Media", view: "generate-media" },
   { icon: Hammer, label: "Build", view: "build" },
-  { icon: History, label: "History", hasDropdown: true },
+  { icon: History, label: "History", view: "history" },
 ];
 
 export const HEADER_LINKS = [

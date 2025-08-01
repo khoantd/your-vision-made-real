@@ -4,6 +4,7 @@ import { ChatArea } from "./ChatArea";
 import { StreamArea } from "./StreamArea";
 import { GenerateMediaArea } from "./GenerateMediaArea";
 import { BuildArea } from "./BuildArea";
+import { HistoryArea } from "./HistoryArea";
 import { SettingsPanel } from "./SettingsPanel";
 import { StreamSettingsPanel } from "./StreamSettingsPanel";
 import { GenerateMediaSettingsPanel } from "./GenerateMediaSettingsPanel";
@@ -20,6 +21,8 @@ export const AIStudioLayout = () => {
         return <GenerateMediaArea />;
       case "build":
         return <BuildArea />;
+      case "history":
+        return <HistoryArea />;
       default:
         return <ChatArea />;
     }
