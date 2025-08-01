@@ -1,17 +1,22 @@
 import { MessageSquare, Radio, Image, Hammer, History, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 
 const navigationItems = [
-  { icon: MessageSquare, label: "Chat", active: true },
-  { icon: Radio, label: "Stream" },
+  { icon: MessageSquare, label: "Chat", view: "chat" as const },
+  { icon: Radio, label: "Stream", view: "stream" as const },
   { icon: Image, label: "Generate Media" },
   { icon: Hammer, label: "Build" },
   { icon: History, label: "History", hasDropdown: true },
 ];
 
-export const Sidebar = () => {
+interface SidebarProps {
+  activeView: "chat" | "stream";
+  setActiveView: Dispatch<SetStateAction<"chat" | "stream">>;
+}
+
+export const Sidebar = ({ activeView, setActiveView }: SidebarProps) => {
   const [historyExpanded, setHistoryExpanded] = useState(false);
 
   return (
@@ -30,11 +35,13 @@ export const Sidebar = () => {
                 variant="ghost"
                 className={cn(
                   "w-full justify-start gap-3 h-10 px-3 text-sidebar-text hover:bg-sidebar-hover",
-                  item.active && "bg-brand-blue text-white hover:bg-brand-blue/90"
+                  (item.view === activeView) && "bg-brand-blue text-white hover:bg-brand-blue/90"
                 )}
                 onClick={() => {
                   if (item.hasDropdown) {
                     setHistoryExpanded(!historyExpanded);
+                  } else if (item.view) {
+                    setActiveView(item.view);
                   }
                 }}
               >
