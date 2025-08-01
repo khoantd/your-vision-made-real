@@ -31,7 +31,7 @@ export const SettingsPanel = () => {
   }
 
   return (
-    <div className="w-80 bg-settings-bg border-l border-border h-screen flex flex-col">
+    <div className="w-full lg:w-80 bg-settings-bg border-l border-border h-full flex flex-col">
       {/* Header */}
       <div className="p-4 border-b border-border flex items-center justify-between">
         <h2 className="font-medium text-foreground">Run settings</h2>

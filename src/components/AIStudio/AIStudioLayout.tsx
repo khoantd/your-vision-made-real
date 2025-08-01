@@ -37,9 +37,15 @@ export const AIStudioLayout = () => {
     <div className="h-screen flex flex-col bg-background">
       <Header />
       <div className="flex-1 flex overflow-hidden">
-        <Sidebar activeView={activeView} setActiveView={setActiveView} />
-        {renderMainArea()}
-        {renderSettingsPanel()}
+        <div className="hidden md:block">
+          <Sidebar activeView={activeView} setActiveView={setActiveView} />
+        </div>
+        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
+          {renderMainArea()}
+          <div className="hidden lg:block">
+            {renderSettingsPanel()}
+          </div>
+        </div>
       </div>
     </div>
   );

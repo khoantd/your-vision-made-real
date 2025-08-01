@@ -4,18 +4,18 @@ import { HEADER_LINKS } from "@/constants/navigation";
 
 export const Header = () => {
   return (
-    <header className="h-14 border-b border-border bg-background flex items-center justify-between px-6">
+    <header className="h-14 border-b border-border bg-background flex items-center justify-between px-4 sm:px-6">
       <div className="flex items-center gap-4">
-        <h1 className="text-xl font-medium text-foreground">Google AI Studio</h1>
+        <h1 className="text-lg sm:text-xl font-medium text-foreground">Google AI Studio</h1>
       </div>
       
-      <div className="flex items-center gap-2">
+      <div className="hidden sm:flex items-center gap-2">
         {HEADER_LINKS.map((link) => (
           <Button 
             key={link.label}
             variant="ghost" 
             size="sm" 
-            className="text-muted-foreground"
+            className="text-muted-foreground hidden md:inline-flex"
             asChild
           >
             <a href={link.href}>{link.label}</a>

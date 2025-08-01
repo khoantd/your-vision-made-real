@@ -14,7 +14,7 @@ export const Sidebar = ({ activeView, setActiveView }: SidebarProps) => {
   const [historyExpanded, setHistoryExpanded] = useState(false);
 
   return (
-    <div className="w-64 bg-sidebar-bg border-r border-border h-screen flex flex-col">
+    <div className="w-64 bg-sidebar-bg border-r border-border h-full flex flex-col">
       {/* Header */}
       <div className="p-4 border-b border-border">
         <h1 className="text-xl font-medium text-sidebar-text">Google AI Studio</h1>

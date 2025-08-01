@@ -33,14 +33,14 @@ export const ChatArea = () => {
   return (
     <div className="flex-1 bg-chat-bg flex flex-col">
       {/* Main Content */}
-      <div className="flex-1 flex flex-col items-center justify-center p-8 max-w-4xl mx-auto w-full">
+      <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 max-w-4xl mx-auto w-full">
         {/* Title */}
-        <h1 className="text-4xl font-normal text-center mb-8 text-foreground">
+        <h1 className="text-2xl sm:text-4xl font-normal text-center mb-6 sm:mb-8 text-foreground">
           Google AI Studio
         </h1>
 
         {/* Chat Prompt Area */}
-        <div className="w-full max-w-2xl mb-8 p-6 bg-prompt-bg border border-border rounded-lg">
+        <div className="w-full max-w-2xl mb-6 sm:mb-8 p-4 sm:p-6 bg-prompt-bg border border-border rounded-lg">
           <div className="flex items-start gap-4">
             <div className="flex-1">
               <label className="text-sm font-medium text-muted-foreground mb-2 block">
