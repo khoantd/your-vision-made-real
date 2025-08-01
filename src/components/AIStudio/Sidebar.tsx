@@ -6,14 +6,14 @@ import { useState, Dispatch, SetStateAction } from "react";
 const navigationItems = [
   { icon: MessageSquare, label: "Chat", view: "chat" as const },
   { icon: Radio, label: "Stream", view: "stream" as const },
-  { icon: Image, label: "Generate Media" },
+  { icon: Image, label: "Generate Media", view: "generate-media" as const },
   { icon: Hammer, label: "Build" },
   { icon: History, label: "History", hasDropdown: true },
 ];
 
 interface SidebarProps {
-  activeView: "chat" | "stream";
-  setActiveView: Dispatch<SetStateAction<"chat" | "stream">>;
+  activeView: "chat" | "stream" | "generate-media";
+  setActiveView: Dispatch<SetStateAction<"chat" | "stream" | "generate-media">>;
 }
 
 export const Sidebar = ({ activeView, setActiveView }: SidebarProps) => {
