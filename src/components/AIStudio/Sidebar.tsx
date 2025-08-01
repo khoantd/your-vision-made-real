@@ -1,19 +1,13 @@
-import { MessageSquare, Radio, Image, Hammer, History, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useState, Dispatch, SetStateAction } from "react";
-
-const navigationItems = [
-  { icon: MessageSquare, label: "Chat", view: "chat" as const },
-  { icon: Radio, label: "Stream", view: "stream" as const },
-  { icon: Image, label: "Generate Media", view: "generate-media" as const },
-  { icon: Hammer, label: "Build" },
-  { icon: History, label: "History", hasDropdown: true },
-];
+import { ViewType } from "@/types";
+import { NAVIGATION_ITEMS, FOOTER_TEXT } from "@/constants/navigation";
 
 interface SidebarProps {
-  activeView: "chat" | "stream" | "generate-media";
-  setActiveView: Dispatch<SetStateAction<"chat" | "stream" | "generate-media">>;
+  activeView: ViewType;
+  setActiveView: Dispatch<SetStateAction<ViewType>>;
 }
 
 export const Sidebar = ({ activeView, setActiveView }: SidebarProps) => {
@@ -29,7 +23,7 @@ export const Sidebar = ({ activeView, setActiveView }: SidebarProps) => {
       {/* Navigation */}
       <nav className="flex-1 p-2">
         <div className="space-y-1">
-          {navigationItems.map((item) => (
+          {NAVIGATION_ITEMS.map((item) => (
             <div key={item.label}>
               <Button
                 variant="ghost"
@@ -80,7 +74,7 @@ export const Sidebar = ({ activeView, setActiveView }: SidebarProps) => {
       {/* Footer */}
       <div className="p-4 border-t border-border">
         <p className="text-xs text-sidebar-text-muted">
-          Google AI models may make mistakes, so double-check outputs.
+          {FOOTER_TEXT}
         </p>
       </div>
     </div>

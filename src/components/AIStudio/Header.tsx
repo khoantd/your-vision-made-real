@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Settings, HelpCircle, User } from "lucide-react";
+import { Settings, User } from "lucide-react";
+import { HEADER_LINKS } from "@/constants/navigation";
 
 export const Header = () => {
   return (
@@ -9,18 +10,17 @@ export const Header = () => {
       </div>
       
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" className="text-muted-foreground">
-          Get API key
-        </Button>
-        <Button variant="ghost" size="sm" className="text-muted-foreground">
-          Studio
-        </Button>
-        <Button variant="ghost" size="sm" className="text-muted-foreground">
-          Dashboard
-        </Button>
-        <Button variant="ghost" size="sm" className="text-muted-foreground">
-          Documentation
-        </Button>
+        {HEADER_LINKS.map((link) => (
+          <Button 
+            key={link.label}
+            variant="ghost" 
+            size="sm" 
+            className="text-muted-foreground"
+            asChild
+          >
+            <a href={link.href}>{link.label}</a>
+          </Button>
+        ))}
         <Button variant="ghost" size="icon" className="text-muted-foreground">
           <Settings className="w-4 h-4" />
         </Button>

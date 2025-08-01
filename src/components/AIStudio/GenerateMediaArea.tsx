@@ -1,40 +1,10 @@
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Play } from "lucide-react";
-
-const models = [
-  {
-    name: "Imagen",
-    description: "Our best image generation model yet, engineered for creativity",
-    icon: "🎨",
-    color: "bg-blue-50 border-blue-200"
-  },
-  {
-    name: "Gemini speech generation",
-    description: "Generate high quality text to speech with Gemini",
-    icon: "🎵",
-    color: "bg-purple-50 border-purple-200"
-  },
-  {
-    name: "Lyria RealTime",
-    description: "Interactively create, control, and perform music in the moment",
-    icon: "🎼",
-    color: "bg-green-50 border-green-200"
-  },
-  {
-    name: "Veo",
-    description: "Create clips & animate images using generative video",
-    icon: "🎬",
-    color: "bg-red-50 border-red-200"
-  },
-  {
-    name: "Gemini image generation",
-    description: "Explore multimodal native image generation and editing",
-    icon: "🖼️",
-    color: "bg-orange-50 border-orange-200"
-  }
-];
+import { useState } from "react";
+import { ModelCard } from "@/components/common/ModelCard";
+import { MEDIA_MODELS, EXAMPLE_PROMPTS } from "@/constants/models";
 
 const examples = [
   {
@@ -88,6 +58,8 @@ const examples = [
 ];
 
 export const GenerateMediaArea = () => {
+  const [selectedModel, setSelectedModel] = useState<string>(MEDIA_MODELS[0].id);
+
   return (
     <div className="flex-1 bg-chat-bg overflow-y-auto">
       <div className="max-w-6xl mx-auto p-8">
@@ -100,17 +72,18 @@ export const GenerateMediaArea = () => {
         </div>
 
         {/* Model Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-          {models.map((model, index) => (
-            <Card key={index} className={`p-6 hover:shadow-md transition-shadow cursor-pointer ${model.color}`}>
-              <div className="flex items-start gap-4">
-                <div className="text-3xl">{model.icon}</div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-foreground mb-2">{model.name}</h3>
-                  <p className="text-sm text-muted-foreground">{model.description}</p>
-                </div>
-              </div>
-            </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+          {MEDIA_MODELS.map((model) => (
+            <ModelCard
+              key={model.id}
+              id={model.id}
+              name={model.name}
+              description={model.description}
+              badge={model.badge}
+              type={model.type}
+              isSelected={selectedModel === model.id}
+              onSelect={setSelectedModel}
+            />
           ))}
         </div>
 

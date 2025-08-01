@@ -6,10 +6,10 @@ import { GenerateMediaArea } from "./GenerateMediaArea";
 import { SettingsPanel } from "./SettingsPanel";
 import { StreamSettingsPanel } from "./StreamSettingsPanel";
 import { GenerateMediaSettingsPanel } from "./GenerateMediaSettingsPanel";
-import { useState } from "react";
+import { useAIStudio } from "@/hooks/useAIStudio";
 
 export const AIStudioLayout = () => {
-  const [activeView, setActiveView] = useState<"chat" | "stream" | "generate-media">("chat");
+  const { activeView, setActiveView } = useAIStudio();
 
   const renderMainArea = () => {
     switch (activeView) {

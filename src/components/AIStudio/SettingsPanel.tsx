@@ -1,10 +1,10 @@
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { X, ChevronDown, Wrench } from "lucide-react";
 import { useState } from "react";
+import { CHAT_MODELS } from "@/constants/models";
 
 export const SettingsPanel = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -52,14 +52,16 @@ export const SettingsPanel = () => {
           <label className="text-sm font-medium text-foreground mb-2 block">
             Model
           </label>
-          <Select defaultValue="gemini-2.5-pro">
+          <Select defaultValue={CHAT_MODELS[0].value}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="gemini-2.5-pro">Gemini 2.5 Pro</SelectItem>
-              <SelectItem value="gemini-1.5-pro">Gemini 1.5 Pro</SelectItem>
-              <SelectItem value="gemini-1.5-flash">Gemini 1.5 Flash</SelectItem>
+              {CHAT_MODELS.map((model) => (
+                <SelectItem key={model.value} value={model.value}>
+                  {model.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
