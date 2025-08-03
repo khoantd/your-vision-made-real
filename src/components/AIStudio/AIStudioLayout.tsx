@@ -9,9 +9,11 @@ import { SettingsPanel } from "./SettingsPanel";
 import { StreamSettingsPanel } from "./StreamSettingsPanel";
 import { GenerateMediaSettingsPanel } from "./GenerateMediaSettingsPanel";
 import { useAIStudio } from "@/hooks/useAIStudio";
+import { useState } from "react";
 
 export const AIStudioLayout = () => {
   const { activeView, setActiveView } = useAIStudio();
+  const [sidebarVisible, setSidebarVisible] = useState(true);
 
   const renderMainArea = () => {
     switch (activeView) {
@@ -41,11 +43,13 @@ export const AIStudioLayout = () => {
 
   return (
     <div className="h-screen flex flex-col bg-background">
-      <Header />
+      <Header sidebarVisible={sidebarVisible} setSidebarVisible={setSidebarVisible} />
       <div className="flex-1 flex overflow-hidden">
-        <div className="hidden md:block">
-          <Sidebar activeView={activeView} setActiveView={setActiveView} />
-        </div>
+        {sidebarVisible && (
+          <div className="hidden md:block">
+            <Sidebar activeView={activeView} setActiveView={setActiveView} />
+          </div>
+        )}
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
           {renderMainArea()}
           <div className="hidden lg:block">

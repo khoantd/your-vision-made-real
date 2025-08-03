@@ -1,11 +1,26 @@
 import { Button } from "@/components/ui/button";
-import { Settings, User } from "lucide-react";
+import { Settings, User, Menu } from "lucide-react";
 import { HEADER_LINKS } from "@/constants/navigation";
 
-export const Header = () => {
+interface HeaderProps {
+  sidebarVisible?: boolean;
+  setSidebarVisible?: (visible: boolean) => void;
+}
+
+export const Header = ({ sidebarVisible, setSidebarVisible }: HeaderProps) => {
   return (
     <header className="h-14 border-b border-border bg-background flex items-center justify-between px-4 sm:px-6">
       <div className="flex items-center gap-4">
+        {setSidebarVisible && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSidebarVisible(!sidebarVisible)}
+            className="text-muted-foreground"
+          >
+            <Menu className="w-4 h-4" />
+          </Button>
+        )}
         <h1 className="text-lg sm:text-xl font-medium text-foreground">Google AI Studio</h1>
       </div>
       
