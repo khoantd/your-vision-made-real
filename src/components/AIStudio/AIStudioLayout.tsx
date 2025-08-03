@@ -10,8 +10,6 @@ import { StreamSettingsPanel } from "./StreamSettingsPanel";
 import { GenerateMediaSettingsPanel } from "./GenerateMediaSettingsPanel";
 import { useAIStudio } from "@/hooks/useAIStudio";
 import { useState } from "react";
-import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export const AIStudioLayout = () => {
   const { activeView, setActiveView } = useAIStudio();
@@ -34,14 +32,30 @@ export const AIStudioLayout = () => {
   };
 
   const renderSettingsPanel = () => {
-    switch (activeView) {
-      case "stream":
-        return <StreamSettingsPanel />;
-      case "generate-media":
-        return <GenerateMediaSettingsPanel />;
-      default:
-        return <SettingsPanel />;
-    }
+    const content = () => {
+      switch (activeView) {
+        case "stream":
+          return <StreamSettingsPanel />;
+        case "generate-media":
+          return <GenerateMediaSettingsPanel />;
+        default:
+          return <SettingsPanel />;
+      }
+    };
+
+    return (
+      <div className="relative">
+        <button
+          onClick={() => setRightSidebarVisible(!rightSidebarVisible)}
+          className="absolute top-4 right-4 z-10 p-2 bg-background border border-border rounded-md hover:bg-muted transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        {content()}
+      </div>
+    );
   };
 
   return (
@@ -66,34 +80,12 @@ export const AIStudioLayout = () => {
               rightSidebarVisible 
                 ? 'w-80 opacity-100 translate-x-0' 
                 : 'w-0 opacity-0 translate-x-full'
-            } h-full relative`}
+            } h-full`}
           >
             <div className={`w-80 h-full ${rightSidebarVisible ? 'animate-slide-in-right' : 'animate-slide-out-right'}`}>
-              {rightSidebarVisible && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-4 right-4 z-10 h-8 w-8"
-                  onClick={() => setRightSidebarVisible(false)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              )}
               {renderSettingsPanel()}
             </div>
           </div>
-          {!rightSidebarVisible && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hidden lg:flex h-8 w-8 mt-4 mr-4"
-              onClick={() => setRightSidebarVisible(true)}
-            >
-              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </Button>
-          )}
         </div>
       </div>
     </div>
