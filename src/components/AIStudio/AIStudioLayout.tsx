@@ -43,9 +43,7 @@ export const AIStudioLayout = () => {
   return (
     <div className="h-screen flex flex-col bg-background">
       <Header />
-      <div className="block md:hidden">
-        <PageToggle activeView={activeView} setActiveView={setActiveView} />
-      </div>
+      <PageToggle activeView={activeView} setActiveView={setActiveView} />
       <div className="flex-1 flex overflow-hidden">
         <div className="hidden md:block">
           <Sidebar activeView={activeView} setActiveView={setActiveView} />
