@@ -1,5 +1,6 @@
 import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
+import { PageToggle } from "./PageToggle";
 import { ChatArea } from "./ChatArea";
 import { StreamArea } from "./StreamArea";
 import { GenerateMediaArea } from "./GenerateMediaArea";
@@ -42,6 +43,9 @@ export const AIStudioLayout = () => {
   return (
     <div className="h-screen flex flex-col bg-background">
       <Header />
+      <div className="block md:hidden">
+        <PageToggle activeView={activeView} setActiveView={setActiveView} />
+      </div>
       <div className="flex-1 flex overflow-hidden">
         <div className="hidden md:block">
           <Sidebar activeView={activeView} setActiveView={setActiveView} />
