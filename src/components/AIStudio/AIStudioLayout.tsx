@@ -45,11 +45,17 @@ export const AIStudioLayout = () => {
     <div className="h-screen flex flex-col bg-background">
       <Header sidebarVisible={sidebarVisible} setSidebarVisible={setSidebarVisible} />
       <div className="flex-1 flex overflow-hidden">
-        {sidebarVisible && (
-          <div className="hidden md:block">
+        <div 
+          className={`hidden md:block transition-all duration-300 ease-in-out ${
+            sidebarVisible 
+              ? 'w-64 opacity-100 translate-x-0' 
+              : 'w-0 opacity-0 -translate-x-full'
+          }`}
+        >
+          <div className={`w-64 ${sidebarVisible ? 'animate-slide-in-left' : 'animate-slide-out-left'}`}>
             <Sidebar activeView={activeView} setActiveView={setActiveView} />
           </div>
-        )}
+        </div>
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
           {renderMainArea()}
           <div className="hidden lg:block">
