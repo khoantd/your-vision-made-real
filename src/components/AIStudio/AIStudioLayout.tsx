@@ -50,9 +50,9 @@ export const AIStudioLayout = () => {
             sidebarVisible 
               ? 'w-64 opacity-100 translate-x-0' 
               : 'w-0 opacity-0 -translate-x-full'
-          }`}
+          } h-full`}
         >
-          <div className={`w-64 ${sidebarVisible ? 'animate-slide-in-left' : 'animate-slide-out-left'}`}>
+          <div className={`w-64 h-full ${sidebarVisible ? 'animate-slide-in-left' : 'animate-slide-out-left'}`}>
             <Sidebar activeView={activeView} setActiveView={setActiveView} />
           </div>
         </div>
