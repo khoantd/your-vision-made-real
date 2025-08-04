@@ -14,6 +14,7 @@ import { useState } from "react";
 export const AIStudioLayout = () => {
   const { activeView, setActiveView } = useAIStudio();
   const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [settingsPanelVisible, setSettingsPanelVisible] = useState(true);
 
   const renderMainArea = () => {
     switch (activeView) {
@@ -43,7 +44,12 @@ export const AIStudioLayout = () => {
 
   return (
     <div className="h-screen flex flex-col bg-background">
-      <Header sidebarVisible={sidebarVisible} setSidebarVisible={setSidebarVisible} />
+      <Header 
+        sidebarVisible={sidebarVisible} 
+        setSidebarVisible={setSidebarVisible}
+        settingsPanelVisible={settingsPanelVisible}
+        setSettingsPanelVisible={setSettingsPanelVisible}
+      />
       <div className="flex-1 flex overflow-hidden">
         <div 
           className={`hidden md:block transition-all duration-300 ease-in-out ${
@@ -56,10 +62,20 @@ export const AIStudioLayout = () => {
             <Sidebar activeView={activeView} setActiveView={setActiveView} />
           </div>
         </div>
-        <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-          {renderMainArea()}
-          <div className="hidden lg:block">
-            {renderSettingsPanel()}
+        <div className="flex-1 flex overflow-hidden">
+          <div className="flex-1 flex flex-col">
+            {renderMainArea()}
+          </div>
+          <div 
+            className={`hidden lg:block transition-all duration-300 ease-in-out ${
+              settingsPanelVisible 
+                ? 'w-80 opacity-100 translate-x-0' 
+                : 'w-0 opacity-0 translate-x-full'
+            } h-full border-l border-border`}
+          >
+            <div className={`w-80 h-full ${settingsPanelVisible ? 'animate-slide-in-right' : 'animate-slide-out-right'}`}>
+              {renderSettingsPanel()}
+            </div>
           </div>
         </div>
       </div>
