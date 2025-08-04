@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from "react";
 import { ViewType, ModelConfig, StreamConfig, MediaGenerationConfig, OpenAIConfig } from "@/types";
+import { saveUserSettings, loadUserSettings, UserSettingsData } from "@/services/userSettings";
+import { useAuth } from "@/hooks/useAuth";
 
 interface AIStudioContextType {
   activeView: ViewType;
@@ -26,6 +28,7 @@ interface AIStudioProviderProps {
 }
 
 export const AIStudioProvider: React.FC<AIStudioProviderProps> = ({ children }) => {
+  const { user } = useAuth();
   const [activeView, setActiveView] = useState<ViewType>("chat");
   const [modelConfig, setModelConfig] = useState<ModelConfig>({
     name: "gpt-4o",
@@ -100,6 +103,41 @@ export const AIStudioProvider: React.FC<AIStudioProviderProps> = ({ children }) 
       updateModelConfig({ apiKey: key });
     }
   }, [modelConfig.provider, updateModelConfig]);
+
+  // Load settings when user logs in
+  useEffect(() => {
+    if (user) {
+      loadUserSettings().then((settings) => {
+        if (settings) {
+          if (settings.activeView) setActiveView(settings.activeView as ViewType);
+          if (settings.modelConfig) setModelConfig(prev => ({ ...prev, ...settings.modelConfig }));
+          if (settings.streamConfig) setStreamConfig(prev => ({ ...prev, ...settings.streamConfig }));
+          if (settings.mediaConfig) setMediaConfig(prev => ({ ...prev, ...settings.mediaConfig }));
+          if (settings.openAIConfig) setOpenAIConfig(prev => ({ ...prev, ...settings.openAIConfig }));
+          if (settings.apiKeys) setApiKeys(prev => ({ ...prev, ...settings.apiKeys }));
+        }
+      }).catch(console.error);
+    }
+  }, [user]);
+
+  // Save settings when they change (debounced)
+  useEffect(() => {
+    if (!user) return;
+    
+    const timeout = setTimeout(() => {
+      const settings: UserSettingsData = {
+        activeView,
+        modelConfig,
+        streamConfig,
+        mediaConfig,
+        openAIConfig,
+        apiKeys
+      };
+      saveUserSettings(settings).catch(console.error);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [user, activeView, modelConfig, streamConfig, mediaConfig, openAIConfig, apiKeys]);
 
   const value: AIStudioContextType = {
     activeView,
