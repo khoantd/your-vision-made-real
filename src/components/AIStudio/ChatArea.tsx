@@ -246,96 +246,93 @@ export const ChatArea = () => {
             }
           ]}
           action={
-            <div className="space-y-6 w-full max-w-4xl">
+            <div className="space-y-6 w-full max-w-4xl mx-auto">
               {/* Enhanced Chat Prompt Area */}
-              <div className="w-full max-w-2xl mb-8 p-6 bg-gradient-to-br from-background to-accent/20 border border-border rounded-xl shadow-lg mx-auto">
-                <div className="flex items-start gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-3">
-                      <label className="text-sm font-medium text-foreground">
-                        Chat Prompt
-                      </label>
-                      <Badge variant="secondary" className="text-xs">
-                        {getProviderIcon()} {getProviderName()}
-                      </Badge>
-                    </div>
-                    <Textarea
-                      ref={textareaRef}
-                      value={prompt}
-                      onChange={(e) => setPrompt(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      className="min-h-[120px] border-border resize-none transition-all duration-200 focus:ring-2 focus:ring-brand-blue/20"
-                      placeholder="Ask me anything... I'm here to help! 🤖"
-                      disabled={isSubmitting}
-                    />
-                    
-                    {/* Quick Prompts */}
-                    {!prompt && (
-                      <div className="mt-4">
-                        <p className="text-xs text-muted-foreground mb-2">Try these quick prompts:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {quickPrompts.slice(0, 3).map((quickPrompt, index) => (
-                            <Button
-                              key={index}
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleQuickPrompt(quickPrompt)}
-                              className="text-xs h-7 px-3 hover:bg-brand-blue/10 hover:border-brand-blue/30 transition-colors"
-                            >
-                              {quickPrompt}
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+              {/* Enhanced Chat Prompt Area */}
+              <div className="w-full max-w-3xl mx-auto p-6 bg-gradient-to-br from-accent/20 to-accent/10 border border-border rounded-xl shadow-lg">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <label className="text-lg font-medium text-foreground">
+                      Chat Prompt
+                    </label>
+                    <Badge variant="secondary" className="text-xs">
+                      {getProviderIcon()} {getProviderName()}
+                    </Badge>
+                    <Badge variant="outline" className="text-xs">
+                      {modelConfig.name}
+                    </Badge>
                   </div>
+                  
+                  <Textarea
+                    ref={textareaRef}
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    className="min-h-[120px] border-border resize-none transition-all duration-200 focus:ring-2 focus:ring-brand-blue/20 bg-background/50 backdrop-blur-sm"
+                    placeholder="Ask me anything... I'm here to help! 🤖"
+                    disabled={isSubmitting}
+                  />
+                  
+                  {/* Quick Prompts */}
+                  {!prompt && (
+                    <div className="space-y-3">
+                      <p className="text-sm font-medium text-foreground">Try these quick prompts:</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                        {quickPrompts.slice(0, 6).map((quickPrompt, index) => (
+                          <Button
+                            key={index}
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleQuickPrompt(quickPrompt)}
+                            className="text-xs h-8 px-3 hover:bg-brand-blue/10 hover:border-brand-blue/30 transition-colors text-left justify-start"
+                          >
+                            {quickPrompt}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
                 
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-border">
+                <div className="flex items-center justify-between pt-4 border-t border-border/50">
                   <div className="flex items-center gap-2">
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground transition-colors">
+                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
                             <HelpCircle className="w-4 h-4" />
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Get help with prompts</p>
-                        </TooltipContent>
+                        <TooltipContent><p>Get help with prompts</p></TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                     
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground transition-colors">
+                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
                             <Code className="w-4 h-4" />
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Code generation</p>
-                        </TooltipContent>
+                        <TooltipContent><p>Code generation</p></TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                     
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground transition-colors">
+                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
                             <Settings className="w-4 h-4" />
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Chat settings</p>
-                        </TooltipContent>
+                        <TooltipContent><p>Chat settings</p></TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </div>
                   
                   <Button 
                     onClick={handleRun}
-                    className="bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white gap-2 px-6 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white gap-2 px-6 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={isSubmitting || !prompt.trim() || !currentApiKey}
                   >
                     {isSubmitting ? (
@@ -355,7 +352,7 @@ export const ChatArea = () => {
 
               {/* Enhanced API Key Warning */}
               {!currentApiKey && (
-                <Alert className="w-full max-w-2xl mb-6 border-orange-200 bg-orange-50 mx-auto">
+                <Alert className="w-full max-w-3xl mx-auto border-orange-200 bg-orange-50 dark:bg-orange-950/20 dark:border-orange-800">
                   <AlertDescription className="flex items-center gap-2">
                     <Settings className="w-4 h-4" />
                     Please enter your {getProviderName()} API key in the settings panel to start chatting.
@@ -365,7 +362,7 @@ export const ChatArea = () => {
 
               {/* Enhanced Test API Key Button */}
               {currentApiKey && (
-                <div className="w-full max-w-2xl mb-8 mx-auto">
+                <div className="w-full max-w-3xl mx-auto">
                   <Button 
                     variant="outline" 
                     onClick={testAPIKey}
@@ -509,22 +506,22 @@ export const ChatArea = () => {
           )}
 
           {/* Enhanced Bottom input */}
-          <div className="p-4 border-t border-border bg-background/50 backdrop-blur-sm">
+          <div className="p-4 border-t border-border bg-background/80 backdrop-blur-sm">
             <div className="max-w-4xl mx-auto">
-              <div className="flex items-end gap-3 p-3 border border-border rounded-xl bg-background shadow-sm">
+              <div className="flex items-end gap-3 p-4 border border-border rounded-xl bg-background/50 backdrop-blur-sm shadow-sm">
                 <div className="flex-1">
                   <Textarea
                     ref={textareaRef}
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder="Type your message... (Press Enter to send)"
-                    className="flex-1 border-0 bg-transparent resize-none min-h-[44px] max-h-[200px] focus-visible:ring-0 text-sm"
+                    placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
+                    className="flex-1 border-0 bg-transparent resize-none min-h-[44px] max-h-[200px] focus-visible:ring-0 text-sm focus-ring"
                     rows={1}
                     disabled={isSubmitting}
                   />
                   {isTyping && (
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center gap-2 mt-2">
                       <User className="w-3 h-3 text-muted-foreground" />
                       <span className="text-xs text-muted-foreground">Typing...</span>
                     </div>
@@ -533,7 +530,7 @@ export const ChatArea = () => {
                 
                 <Button 
                   size="sm" 
-                  className="bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={handleSubmit}
                   disabled={isSubmitting || !prompt.trim() || !currentApiKey}
                 >
@@ -550,7 +547,7 @@ export const ChatArea = () => {
                   )}
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground mt-2 text-center">
+              <p className="text-xs text-muted-foreground mt-3 text-center">
                 {getProviderName()} AI models may make mistakes, so double-check outputs.
               </p>
             </div>
