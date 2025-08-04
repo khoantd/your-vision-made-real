@@ -2,6 +2,7 @@ import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { ChatArea } from "./ChatArea";
 import { StreamArea } from "./StreamArea";
+import { TalkArea } from "./TalkArea";
 import { GenerateMediaArea } from "./GenerateMediaArea";
 import { BuildArea } from "./BuildArea";
 import { HistoryArea } from "./HistoryArea";
@@ -19,6 +20,8 @@ export const AIStudioLayout = () => {
     switch (activeView) {
       case "stream":
         return <StreamArea />;
+      case "talk":
+        return <TalkArea />;
       case "generate-media":
         return <GenerateMediaArea />;
       case "build":

@@ -1,9 +1,10 @@
-import { MessageSquare, Radio, Image, Hammer, History } from "lucide-react";
+import { MessageSquare, Radio, Image, Hammer, History, Mic } from "lucide-react";
 import { NavigationItem } from "@/types";
 
 export const NAVIGATION_ITEMS: NavigationItem[] = [
   { icon: MessageSquare, label: "Chat", view: "chat" },
   { icon: Radio, label: "Stream", view: "stream" },
+  { icon: Mic, label: "Talk", view: "talk" },
   { icon: Image, label: "Generate Media", view: "generate-media" },
   { icon: Hammer, label: "Build", view: "build" },
   { icon: History, label: "History", view: "history" },
