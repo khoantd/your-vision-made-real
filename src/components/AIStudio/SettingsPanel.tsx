@@ -32,6 +32,18 @@ export const SettingsPanel = () => {
   const [apiTimeout, setApiTimeout] = useState([30]);
   const [streaming, setStreaming] = useState(true);
   const [logProbabilities, setLogProbabilities] = useState(false);
+  const [selectedModel, setSelectedModel] = useState(CHAT_MODELS[0].value);
+  const [apiProvider, setApiProvider] = useState("google");
+  const [useCustomEndpoint, setUseCustomEndpoint] = useState(false);
+  const [customEndpoint, setCustomEndpoint] = useState("");
+  const [responseFormat, setResponseFormat] = useState("text");
+  const [seed, setSeed] = useState("");
+  const [logitBias, setLogitBias] = useState("");
+
+  // Get current model info
+  const currentModel = CHAT_MODELS.find(m => m.value === selectedModel);
+  const isOpenAI = currentModel?.provider === "openai";
+  const isGoogle = currentModel?.provider === "google";
   const [structuredOutputOpen, setStructuredOutputOpen] = useState(false);
   const [outputFormat, setOutputFormat] = useState("json");
   const [jsonSchema, setJsonSchema] = useState(`{
@@ -161,7 +173,121 @@ export const SettingsPanel = () => {
         >
           <X className="w-4 h-4" />
         </Button>
-      </div>
+        </div>
+
+        {/* API Provider Settings */}
+        <div>
+          <label className="text-sm font-medium text-foreground mb-2 block">
+            API Provider: {apiProvider}
+          </label>
+          <div className="text-xs text-muted-foreground">
+            {isOpenAI && "Using OpenAI API"}
+            {isGoogle && "Using Google AI API"}
+          </div>
+        </div>
+
+        {/* OpenAI Specific Settings */}
+        {isOpenAI && (
+          <div className="space-y-4 p-3 border rounded-md bg-muted/20">
+            <h4 className="text-sm font-medium text-foreground">OpenAI Settings</h4>
+            
+            {/* Response Format */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Response Format
+              </label>
+              <Select value={responseFormat} onValueChange={setResponseFormat}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="text">Text</SelectItem>
+                  <SelectItem value="json_object">JSON Object</SelectItem>
+                  <SelectItem value="json_schema">JSON Schema</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Seed */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Seed (for reproducibility)
+              </label>
+              <Input
+                placeholder="Enter seed value (optional)"
+                value={seed}
+                onChange={(e) => setSeed(e.target.value)}
+                className="text-sm"
+              />
+            </div>
+
+            {/* Logit Bias */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Logit Bias (JSON)
+              </label>
+              <Textarea
+                placeholder='{"hello": 10, "world": -5}'
+                value={logitBias}
+                onChange={(e) => setLogitBias(e.target.value)}
+                className="text-sm font-mono min-h-16"
+              />
+            </div>
+
+            {/* Custom Endpoint */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-foreground">Use Custom Endpoint</span>
+                <Switch checked={useCustomEndpoint} onCheckedChange={setUseCustomEndpoint} />
+              </div>
+              
+              {useCustomEndpoint && (
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">
+                    Custom API Endpoint
+                  </label>
+                  <Input
+                    placeholder="https://api.openai.com/v1"
+                    value={customEndpoint}
+                    onChange={(e) => setCustomEndpoint(e.target.value)}
+                    className="text-sm"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Google Specific Settings */}
+        {isGoogle && (
+          <div className="space-y-4 p-3 border rounded-md bg-muted/20">
+            <h4 className="text-sm font-medium text-foreground">Google AI Settings</h4>
+            
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-foreground">Safety Settings</span>
+                <Button variant="ghost" size="sm" className="text-xs text-muted-foreground">
+                  Configure
+                </Button>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-foreground">Candidate Count</span>
+                <Select defaultValue="1">
+                  <SelectTrigger className="w-20">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1</SelectItem>
+                    <SelectItem value="2">2</SelectItem>
+                    <SelectItem value="3">3</SelectItem>
+                    <SelectItem value="4">4</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+        )}
 
       {/* Settings Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
@@ -170,14 +296,32 @@ export const SettingsPanel = () => {
           <label className="text-sm font-medium text-foreground mb-2 block">
             Model
           </label>
-          <Select defaultValue={CHAT_MODELS[0].value}>
+          <Select value={selectedModel} onValueChange={(value) => {
+            setSelectedModel(value);
+            const model = CHAT_MODELS.find(m => m.value === value);
+            setApiProvider(model?.provider || "google");
+          }}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="max-h-80">
               {CHAT_MODELS.map((model) => (
                 <SelectItem key={model.value} value={model.value}>
-                  {model.label}
+                  <div className="flex items-center gap-2">
+                    <span>{model.label}</span>
+                    {model.badge && (
+                      <Badge variant={
+                        model.badge === "Recommended" ? "default" :
+                        model.badge === "Reasoning" ? "secondary" :
+                        model.badge === "Fast" ? "outline" : "secondary"
+                      } className="text-xs">
+                        {model.badge}
+                      </Badge>
+                    )}
+                    <Badge variant="outline" className="text-xs opacity-60">
+                      {model.provider}
+                    </Badge>
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>
