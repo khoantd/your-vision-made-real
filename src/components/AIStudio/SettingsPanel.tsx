@@ -339,6 +339,25 @@ export const SettingsPanel = () => {
                         </Select>
                       </div>
 
+                      {/* Schema Templates */}
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-2 block">
+                          Quick Templates
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {schemaTemplates.map((template, index) => (
+                            <Button
+                              key={index}
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setJsonSchema(template.schema)}
+                              className="text-xs"
+                            >
+                              {template.name}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
 
                       {/* JSON Schema Editor */}
                       <div>
