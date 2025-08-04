@@ -197,7 +197,13 @@ export const Sidebar = ({ activeView, setActiveView }: SidebarProps) => {
             <Button 
               variant="ghost" 
               size="sm"
-              className="w-full justify-start gap-2 h-9 text-sm text-sidebar-text-muted hover:bg-sidebar-hover"
+              className="w-full justify-start gap-2 h-9 text-sm text-sidebar-text-muted hover:bg-sidebar-hover hover:text-brand-blue transition-colors"
+              onClick={() => {
+                // Reset to chat view and trigger new chat
+                setActiveView("chat");
+                // Dispatch custom event for new chat
+                window.dispatchEvent(new CustomEvent('newChat'));
+              }}
             >
               <Plus className="w-3 h-3" />
               New Chat

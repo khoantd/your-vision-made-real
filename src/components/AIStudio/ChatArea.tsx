@@ -70,6 +70,16 @@ export const ChatArea = () => {
     }
   }, [chatState.messages]);
 
+  // Listen for new chat events from sidebar
+  useEffect(() => {
+    const handleNewChat = () => {
+      handleClearConfirm(); // Clear current chat
+    };
+
+    window.addEventListener('newChat', handleNewChat);
+    return () => window.removeEventListener('newChat', handleNewChat);
+  }, []);
+
   // Auto-resize textarea with smooth animation
   useEffect(() => {
     if (textareaRef.current) {
