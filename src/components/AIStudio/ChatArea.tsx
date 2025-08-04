@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Play, HelpCircle, Code, Share, RotateCcw, MoreHorizontal, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, Edit, X } from "lucide-react";
 import { useState } from "react";
 import { FeatureCard } from "@/components/common/FeatureCard";
@@ -32,14 +33,24 @@ export const ChatArea = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [showThinking, setShowThinking] = useState(true);
   const [thinkingExpanded, setThinkingExpanded] = useState(true);
+  const [showClearDialog, setShowClearDialog] = useState(false);
 
   const handleRun = () => {
     setIsRunning(true);
   };
 
-  const handleClear = () => {
+  const handleClearClick = () => {
+    setShowClearDialog(true);
+  };
+
+  const handleClearConfirm = () => {
     setIsRunning(false);
     setPrompt("Hello");
+    setShowClearDialog(false);
+  };
+
+  const handleClearCancel = () => {
+    setShowClearDialog(false);
   };
 
   return (
@@ -133,7 +144,7 @@ export const ChatArea = () => {
                 size="icon" 
                 variant="ghost" 
                 className="text-muted-foreground hover:text-foreground"
-                onClick={handleClear}
+                onClick={handleClearClick}
                 title="Clear chat"
               >
                 <X className="w-4 h-4" />
@@ -249,6 +260,34 @@ export const ChatArea = () => {
           </div>
         </div>
       )}
+
+      {/* Clear Confirmation Dialog */}
+      <AlertDialog open={showClearDialog} onOpenChange={setShowClearDialog}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-lg font-semibold text-foreground">
+              Are you sure you want to clear?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-muted-foreground">
+              Are you sure you want to clear? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex gap-2">
+            <AlertDialogCancel 
+              onClick={handleClearCancel}
+              className="bg-background border border-border text-foreground hover:bg-accent"
+            >
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleClearConfirm}
+              className="bg-brand-blue hover:bg-brand-blue/90 text-white"
+            >
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
