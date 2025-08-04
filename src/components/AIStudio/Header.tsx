@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Settings, User, Menu, Sparkles, Bot, Bell, Search, HelpCircle, LogOut, PanelRightOpen, PanelRightClose } from "lucide-react";
+import { Settings, User, Menu, Sparkles, Bot, Bell, Search, HelpCircle, LogOut } from "lucide-react";
 import { HEADER_LINKS } from "@/constants/navigation";
 import { useAIStudio } from "@/contexts/AIStudioContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,16 +11,9 @@ import { useState } from "react";
 interface HeaderProps {
   sidebarVisible?: boolean;
   setSidebarVisible?: (visible: boolean) => void;
-  settingsPanelVisible?: boolean;
-  setSettingsPanelVisible?: (visible: boolean) => void;
 }
 
-export const Header = ({ 
-  sidebarVisible, 
-  setSidebarVisible, 
-  settingsPanelVisible, 
-  setSettingsPanelVisible 
-}: HeaderProps) => {
+export const Header = ({ sidebarVisible, setSidebarVisible }: HeaderProps) => {
   const { modelConfig } = useAIStudio();
   const { signOut, user } = useAuth();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -150,26 +143,6 @@ export const Header = ({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-
-          {setSettingsPanelVisible && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={() => setSettingsPanelVisible(!settingsPanelVisible)}
-                    className="text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                  >
-                    {settingsPanelVisible ? <PanelRightClose className="w-4 h-4" /> : <PanelRightOpen className="w-4 h-4" />}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{settingsPanelVisible ? "Hide settings panel" : "Show settings panel"}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
 
           <TooltipProvider>
             <Tooltip>
