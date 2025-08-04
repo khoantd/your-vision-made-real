@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { PromptingGuide } from "./PromptingGuide";
 import { FAQ } from "./FAQ";
+import { SearchBar } from "@/components/common/SearchBar";
 
 interface HeaderProps {
   sidebarVisible?: boolean;
@@ -78,21 +79,13 @@ export const Header = ({ sidebarVisible, setSidebarVisible }: HeaderProps) => {
         </div>
       </div>
       
-      {/* Search Bar */}
+      {/* Enhanced Search Bar */}
       <div className="hidden md:flex items-center gap-2 flex-1 max-w-md mx-8">
-        <div className={cn(
-          "relative flex items-center w-full",
-          isSearchFocused && "ring-2 ring-brand-blue/20"
-        )}>
-          <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search conversations, settings..."
-            className="w-full pl-10 pr-4 py-2 bg-accent/50 border border-border rounded-lg text-sm focus:outline-none focus:ring-0 transition-all duration-200"
-            onFocus={() => setIsSearchFocused(true)}
-            onBlur={() => setIsSearchFocused(false)}
-          />
-        </div>
+        <SearchBar 
+          placeholder="Search conversations, settings... (⌘K)"
+          onSearch={(query) => console.log('Search:', query)}
+          onResultSelect={(result) => console.log('Selected:', result)}
+        />
       </div>
       
       <div className="flex items-center gap-2">
