@@ -103,6 +103,37 @@ export const SettingsPanel = () => {
 }`
     }
   ]);
+  const [functionCallingOpen, setFunctionCallingOpen] = useState(false);
+  const [functions, setFunctions] = useState<any[]>([
+    {
+      id: 1,
+      name: "get_weather",
+      description: "Get current weather for a location",
+      parameters: {
+        type: "object",
+        properties: {
+          location: {
+            type: "string",
+            description: "The city and state, e.g. San Francisco, CA"
+          },
+          unit: {
+            type: "string",
+            enum: ["celsius", "fahrenheit"],
+            description: "Temperature unit"
+          }
+        },
+        required: ["location"]
+      }
+    }
+  ]);
+  const [selectedFunction, setSelectedFunction] = useState<any>(null);
+  const [newFunctionName, setNewFunctionName] = useState("");
+  const [newFunctionDescription, setNewFunctionDescription] = useState("");
+  const [newFunctionParams, setNewFunctionParams] = useState(`{
+  "type": "object",
+  "properties": {},
+  "required": []
+}`);
 
   if (!isOpen) {
     return (
@@ -431,11 +462,411 @@ export const SettingsPanel = () => {
               <Switch checked={codeExecution} onCheckedChange={setCodeExecution} />
             </div>
             <div className="flex items-center justify-between">
-              <div>
+              <div className="flex items-center gap-2">
                 <span className="text-sm text-foreground">Function calling</span>
-                <Button variant="ghost" size="sm" className="ml-2 text-xs text-muted-foreground">
-                  Edit
-                </Button>
+                <Dialog open={functionCallingOpen} onOpenChange={setFunctionCallingOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-foreground">
+                      Edit
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>Configure Function Calling</DialogTitle>
+                      <DialogDescription>
+                        Define custom functions that the AI can call to perform specific tasks.
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="space-y-4">
+                      {/* Function List */}
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <label className="text-sm font-medium text-foreground">
+                            Available Functions ({functions.length})
+                          </label>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              if (newFunctionName.trim()) {
+                                const newFunction = {
+                                  id: Date.now(),
+                                  name: newFunctionName,
+                                  description: newFunctionDescription || "No description provided",
+                                  parameters: JSON.parse(newFunctionParams)
+                                };
+                                setFunctions([...functions, newFunction]);
+                                setNewFunctionName("");
+                                setNewFunctionDescription("");
+                                setNewFunctionParams(`{
+  "type": "object",
+  "properties": {},
+  "required": []
+}`);
+                              }
+                            }}
+                          >
+                            <Plus className="w-3 h-3 mr-1" />
+                            Add Function
+                          </Button>
+                        </div>
+
+                        <div className="space-y-2 max-h-48 overflow-y-auto border rounded-md p-2">
+                          {functions.map((func) => (
+                            <div
+                              key={func.id}
+                              className={`p-3 border rounded-md cursor-pointer transition-colors ${
+                                selectedFunction?.id === func.id
+                                  ? "border-primary bg-primary/5"
+                                  : "border-border hover:bg-muted/50"
+                              }`}
+                              onClick={() => setSelectedFunction(func)}
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <h4 className="font-medium text-sm text-foreground">{func.name}</h4>
+                                  <p className="text-xs text-muted-foreground mt-1">{func.description}</p>
+                                  <div className="flex items-center gap-2 mt-2">
+                                    <Badge variant="secondary" className="text-xs">
+                                      {Object.keys(func.parameters.properties || {}).length} params
+                                    </Badge>
+                                    <Badge variant={func.parameters.required?.length > 0 ? "destructive" : "secondary"} className="text-xs">
+                                      {func.parameters.required?.length || 0} required
+                                    </Badge>
+                                  </div>
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setFunctions(functions.filter(f => f.id !== func.id));
+                                    if (selectedFunction?.id === func.id) {
+                                      setSelectedFunction(null);
+                                    }
+                                  }}
+                                  className="text-destructive hover:text-destructive"
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Add New Function Form */}
+                      <div className="border rounded-md p-4 bg-muted/20">
+                        <h4 className="font-medium text-sm text-foreground mb-3">Add New Function</h4>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-xs font-medium text-foreground mb-1 block">
+                              Function Name
+                            </label>
+                            <Input
+                              placeholder="e.g., calculate_total"
+                              value={newFunctionName}
+                              onChange={(e) => setNewFunctionName(e.target.value)}
+                              className="text-sm"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs font-medium text-foreground mb-1 block">
+                              Description
+                            </label>
+                            <Input
+                              placeholder="What does this function do?"
+                              value={newFunctionDescription}
+                              onChange={(e) => setNewFunctionDescription(e.target.value)}
+                              className="text-sm"
+                            />
+                          </div>
+                        </div>
+                        <div className="mt-3">
+                          <label className="text-xs font-medium text-foreground mb-1 block">
+                            Parameters Schema
+                          </label>
+                          <Textarea
+                            value={newFunctionParams}
+                            onChange={(e) => setNewFunctionParams(e.target.value)}
+                            className="font-mono text-xs min-h-20"
+                            placeholder="JSON schema for function parameters"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Function Details Editor */}
+                      {selectedFunction && (
+                        <div className="border rounded-md p-4">
+                          <div className="flex items-center justify-between mb-3">
+                            <h4 className="font-medium text-sm text-foreground">
+                              Edit Function: {selectedFunction.name}
+                            </h4>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                navigator.clipboard.writeText(JSON.stringify(selectedFunction, null, 2));
+                              }}
+                              className="text-xs"
+                            >
+                              <Copy className="w-3 h-3 mr-1" />
+                              Copy
+                            </Button>
+                          </div>
+                          
+                          <div className="space-y-3">
+                            <div>
+                              <label className="text-xs font-medium text-foreground mb-1 block">
+                                Function Name
+                              </label>
+                              <Input
+                                value={selectedFunction.name}
+                                onChange={(e) => {
+                                  const updated = { ...selectedFunction, name: e.target.value };
+                                  setSelectedFunction(updated);
+                                  setFunctions(functions.map(f => f.id === updated.id ? updated : f));
+                                }}
+                                className="text-sm"
+                              />
+                            </div>
+                            
+                            <div>
+                              <label className="text-xs font-medium text-foreground mb-1 block">
+                                Description
+                              </label>
+                              <Input
+                                value={selectedFunction.description}
+                                onChange={(e) => {
+                                  const updated = { ...selectedFunction, description: e.target.value };
+                                  setSelectedFunction(updated);
+                                  setFunctions(functions.map(f => f.id === updated.id ? updated : f));
+                                }}
+                                className="text-sm"
+                              />
+                            </div>
+                            
+                            <div>
+                              <label className="text-xs font-medium text-foreground mb-1 block">
+                                Parameters Schema
+                              </label>
+                              <Textarea
+                                value={JSON.stringify(selectedFunction.parameters, null, 2)}
+                                onChange={(e) => {
+                                  try {
+                                    const params = JSON.parse(e.target.value);
+                                    const updated = { ...selectedFunction, parameters: params };
+                                    setSelectedFunction(updated);
+                                    setFunctions(functions.map(f => f.id === updated.id ? updated : f));
+                                  } catch (error) {
+                                    // Handle invalid JSON
+                                  }
+                                }}
+                                className="font-mono text-xs min-h-32"
+                              />
+                            </div>
+
+                            {/* Parameter Helper Buttons */}
+                            <div>
+                              <label className="text-xs font-medium text-foreground mb-2 block">
+                                Quick Add Parameters
+                              </label>
+                              <div className="grid grid-cols-3 gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    const params = { ...selectedFunction.parameters };
+                                    params.properties = params.properties || {};
+                                    params.properties.query = {
+                                      type: "string",
+                                      description: "Search query"
+                                    };
+                                    const updated = { ...selectedFunction, parameters: params };
+                                    setSelectedFunction(updated);
+                                    setFunctions(functions.map(f => f.id === updated.id ? updated : f));
+                                  }}
+                                  className="text-xs"
+                                >
+                                  + Query
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    const params = { ...selectedFunction.parameters };
+                                    params.properties = params.properties || {};
+                                    params.properties.limit = {
+                                      type: "number",
+                                      description: "Maximum number of results"
+                                    };
+                                    const updated = { ...selectedFunction, parameters: params };
+                                    setSelectedFunction(updated);
+                                    setFunctions(functions.map(f => f.id === updated.id ? updated : f));
+                                  }}
+                                  className="text-xs"
+                                >
+                                  + Limit
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    const params = { ...selectedFunction.parameters };
+                                    params.properties = params.properties || {};
+                                    params.properties.options = {
+                                      type: "array",
+                                      items: { type: "string" },
+                                      description: "List of options"
+                                    };
+                                    const updated = { ...selectedFunction, parameters: params };
+                                    setSelectedFunction(updated);
+                                    setFunctions(functions.map(f => f.id === updated.id ? updated : f));
+                                  }}
+                                  className="text-xs"
+                                >
+                                  + Array
+                                </Button>
+                              </div>
+                            </div>
+
+                            {/* Validation */}
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => {
+                                try {
+                                  JSON.parse(JSON.stringify(selectedFunction.parameters));
+                                  alert("Function schema is valid!");
+                                } catch (e) {
+                                  alert("Invalid function schema: " + e.message);
+                                }
+                              }}
+                              className="w-full"
+                            >
+                              Validate Function
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Function Templates */}
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-2 block">
+                          Function Templates
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const template = {
+                                id: Date.now(),
+                                name: "search_database",
+                                description: "Search through database records",
+                                parameters: {
+                                  type: "object",
+                                  properties: {
+                                    query: { type: "string", description: "Search query" },
+                                    table: { type: "string", description: "Database table name" },
+                                    limit: { type: "number", description: "Max results", default: 10 }
+                                  },
+                                  required: ["query", "table"]
+                                }
+                              };
+                              setFunctions([...functions, template]);
+                            }}
+                            className="text-xs"
+                          >
+                            Database Search
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const template = {
+                                id: Date.now(),
+                                name: "send_email",
+                                description: "Send an email message",
+                                parameters: {
+                                  type: "object",
+                                  properties: {
+                                    to: { type: "string", description: "Recipient email" },
+                                    subject: { type: "string", description: "Email subject" },
+                                    body: { type: "string", description: "Email content" }
+                                  },
+                                  required: ["to", "subject", "body"]
+                                }
+                              };
+                              setFunctions([...functions, template]);
+                            }}
+                            className="text-xs"
+                          >
+                            Send Email
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const template = {
+                                id: Date.now(),
+                                name: "calculate_math",
+                                description: "Perform mathematical calculations",
+                                parameters: {
+                                  type: "object",
+                                  properties: {
+                                    expression: { type: "string", description: "Math expression to evaluate" },
+                                    precision: { type: "number", description: "Decimal precision", default: 2 }
+                                  },
+                                  required: ["expression"]
+                                }
+                              };
+                              setFunctions([...functions, template]);
+                            }}
+                            className="text-xs"
+                          >
+                            Math Calculator
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const template = {
+                                id: Date.now(),
+                                name: "api_request",
+                                description: "Make HTTP API request",
+                                parameters: {
+                                  type: "object",
+                                  properties: {
+                                    url: { type: "string", description: "API endpoint URL" },
+                                    method: { type: "string", enum: ["GET", "POST", "PUT", "DELETE"] },
+                                    headers: { type: "object", description: "Request headers" },
+                                    body: { type: "object", description: "Request body" }
+                                  },
+                                  required: ["url", "method"]
+                                }
+                              };
+                              setFunctions([...functions, template]);
+                            }}
+                            className="text-xs"
+                          >
+                            API Request
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setFunctionCallingOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button onClick={() => setFunctionCallingOpen(false)}>
+                        Save Functions
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
               <Switch checked={functionCalling} onCheckedChange={setFunctionCalling} />
             </div>
