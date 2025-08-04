@@ -160,43 +160,48 @@ export const BuildArea = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="templates" className="space-y-6">
-              {/* Templates Section */}
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-semibold text-foreground mb-2">Quick Start Templates</h2>
-                <p className="text-muted-foreground">Choose a template to get started building with AI</p>
+            <TabsContent value="templates" className="space-y-8">
+              {/* Enhanced Templates Section */}
+              <div className="text-center mb-10">
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <div className="p-3 bg-gradient-to-br from-primary to-primary/80 rounded-xl shadow-lg">
+                    <Hammer className="w-6 h-6 text-white" />
+                  </div>
+                  <h2 className="text-3xl font-bold text-foreground">Quick Start Templates</h2>
+                </div>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Choose a professionally designed template to accelerate your AI project development
+                </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {templates.map((template, index) => (
-                  <Card key={index} className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-2 hover:border-brand-blue/20">
-                    <div className="p-6">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className={cn("p-3 rounded-lg", template.color)}>
+                  <Card key={index} className="group hover:shadow-2xl transition-all duration-500 cursor-pointer border-2 hover:border-primary/30 hover-lift bg-gradient-to-br from-background to-muted/20">
+                    <div className="p-8">
+                      <div className="flex flex-col gap-4 mb-6">
+                        <div className={cn("p-4 rounded-xl shadow-lg self-start", template.color)}>
                           {template.icon}
                         </div>
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-foreground mb-1">{template.title}</h3>
-                          <p className="text-sm text-muted-foreground">{template.description}</p>
+                        <div>
+                          <h3 className="text-xl font-bold text-foreground mb-2">{template.title}</h3>
+                          <p className="text-muted-foreground leading-relaxed">{template.description}</p>
                         </div>
                       </div>
                       
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-xs">
-                            {template.difficulty}
-                          </Badge>
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <Clock className="w-3 h-3" />
-                            {template.time}
-                          </div>
+                      <div className="flex items-center justify-between mb-6 p-3 bg-muted/30 rounded-lg">
+                        <Badge variant="outline" className="text-xs font-medium px-3 py-1">
+                          {template.difficulty}
+                        </Badge>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
+                          <Clock className="w-4 h-4" />
+                          {template.time}
                         </div>
                       </div>
 
-                      <Button className="w-full bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white transition-all duration-200 group-hover:shadow-md">
-                        <Play className="w-4 h-4 mr-2" />
+                      <Button className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground transition-all duration-300 group-hover:shadow-xl shadow-lg">
+                        <Play className="w-5 h-5 mr-2" />
                         Start Building
-                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                       </Button>
                     </div>
                   </Card>
@@ -204,98 +209,114 @@ export const BuildArea = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="showcase" className="space-y-6">
-              {/* Showcase Section */}
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-semibold text-foreground mb-2">Featured Applications</h2>
-                <p className="text-muted-foreground">Explore advanced AI applications built with Gemini</p>
+            <TabsContent value="showcase" className="space-y-8">
+              {/* Enhanced Showcase Section */}
+              <div className="text-center mb-10">
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <div className="p-3 bg-gradient-to-br from-primary to-primary/80 rounded-xl shadow-lg">
+                    <Star className="w-6 h-6 text-white" />
+                  </div>
+                  <h2 className="text-3xl font-bold text-foreground">Featured Applications</h2>
+                </div>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Discover cutting-edge AI applications built with Gemini's advanced capabilities
+                </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {showcaseApps.map((app) => (
                   <Card 
                     key={app.id} 
                     className={cn(
-                      "group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-brand-blue/20 relative overflow-hidden",
-                      hoveredApp === app.id && "scale-105"
+                      "group hover:shadow-2xl transition-all duration-500 cursor-pointer border-2 hover:border-primary/30 relative overflow-hidden bg-gradient-to-br from-background to-muted/20",
+                      hoveredApp === app.id && "scale-105 shadow-2xl"
                     )}
                     onMouseEnter={() => setHoveredApp(app.id)}
                     onMouseLeave={() => setHoveredApp(null)}
                   >
-                    {/* App Icon */}
-                    <div className="p-6 pb-4">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className={cn("p-3 rounded-lg", app.color)}>
+                    <div className="p-6">
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className={cn("p-3 rounded-xl shadow-lg", app.color)}>
                           {app.icon}
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold text-foreground mb-1">{app.title}</h3>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                            <span>{app.rating}</span>
-                            <Users className="w-3 h-3" />
-                            <span>{app.users.toLocaleString()}</span>
+                          <h3 className="text-lg font-bold text-foreground mb-2">{app.title}</h3>
+                          <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2">
+                            <div className="flex items-center gap-1">
+                              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                              <span className="font-medium">{app.rating}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Users className="w-3 h-3" />
+                              <span className="font-medium">{app.users.toLocaleString()}</span>
+                            </div>
                           </div>
                         </div>
                       </div>
                       
-                      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                      <p className="text-sm text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
                         {app.description}
                       </p>
 
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-1 mb-4">
+                      {/* Enhanced Tags */}
+                      <div className="flex flex-wrap gap-2 mb-4">
                         {app.tags.map((tag, index) => (
-                          <Badge key={index} variant="secondary" className="text-xs">
+                          <Badge key={index} variant="secondary" className="text-xs px-2 py-1 bg-primary/10 text-primary border-primary/20">
                             {tag}
                           </Badge>
                         ))}
                       </div>
 
-                      {/* Difficulty and Time */}
-                      <div className="flex items-center justify-between mb-4">
-                        <Badge variant="outline" className="text-xs">
+                      {/* Enhanced Difficulty and Time */}
+                      <div className="flex items-center justify-between mb-6 p-3 bg-muted/30 rounded-lg">
+                        <Badge variant="outline" className="text-xs font-medium px-3 py-1">
                           {app.difficulty}
                         </Badge>
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <Clock className="w-3 h-3" />
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
+                          <Clock className="w-4 h-4" />
                           {app.time}
                         </div>
                       </div>
 
-                      <Button className="w-full bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white transition-all duration-200">
-                        <Play className="w-4 h-4 mr-2" />
+                      <Button className="w-full h-12 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground transition-all duration-300 shadow-lg hover:shadow-xl">
+                        <Play className="w-5 h-5 mr-2" />
                         Launch App
-                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform" />
                       </Button>
                     </div>
 
-                    {/* Hover Effect */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    {/* Enhanced Hover Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </Card>
                 ))}
               </div>
             </TabsContent>
           </Tabs>
 
-          {/* Enhanced Footer */}
-          <div className="mt-16 text-center">
-            <div className="bg-gradient-to-r from-accent/20 to-accent/10 rounded-xl p-8 border border-border">
-              <h3 className="text-xl font-semibold text-foreground mb-2">Ready to Build?</h3>
-              <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                Start creating your own AI-powered applications with Gemini's advanced capabilities.
+          {/* Enhanced Call to Action Footer */}
+          <div className="mt-20 text-center">
+            <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/20 p-12 shadow-xl">
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <div className="p-3 bg-gradient-to-br from-primary to-primary/80 rounded-xl shadow-lg">
+                  <Sparkles className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-3xl font-bold text-foreground">Ready to Build?</h3>
+              </div>
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+                Transform your ideas into reality with AI-powered applications. Start building with Gemini's 
+                cutting-edge capabilities and join thousands of developers creating the future.
               </p>
-              <div className="flex items-center justify-center gap-4">
-                <Button className="bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white">
-                  <Plus className="w-4 h-4 mr-2" />
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Button size="lg" className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground px-8 py-4 text-lg shadow-lg hover:shadow-xl hover-lift">
+                  <Plus className="w-5 h-5 mr-2" />
                   Create New Project
                 </Button>
-                <Button variant="outline">
-                  <Sparkles className="w-4 h-4 mr-2" />
+                <Button variant="outline" size="lg" className="px-8 py-4 text-lg border-2 border-primary/30 hover:bg-primary/10 hover:border-primary/50">
+                  <Sparkles className="w-5 h-5 mr-2" />
                   Explore Examples
                 </Button>
               </div>
-            </div>
+            </Card>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Play, HelpCircle, Code, Share, RotateCcw, MoreHorizontal, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, Edit, X, Copy, Maximize2, RotateCcw as Refresh, Send, TestTube, Sparkles, MessageSquare, Bot, User, Settings } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
@@ -247,147 +248,171 @@ export const ChatArea = () => {
           ]}
           action={
             <div className="space-y-6 w-full max-w-4xl mx-auto">
-              {/* Enhanced Chat Prompt Area */}
-              {/* Enhanced Chat Prompt Area */}
-              <div className="w-full max-w-3xl mx-auto p-6 bg-gradient-to-br from-accent/20 to-accent/10 border border-border rounded-xl shadow-lg">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <label className="text-lg font-medium text-foreground">
-                      Chat Prompt
-                    </label>
-                    <Badge variant="secondary" className="text-xs">
-                      {getProviderIcon()} {getProviderName()}
-                    </Badge>
-                    <Badge variant="outline" className="text-xs">
-                      {modelConfig.name}
-                    </Badge>
-                  </div>
-                  
-                  <Textarea
-                    ref={textareaRef}
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    className="min-h-[120px] border-border resize-none transition-all duration-200 focus:ring-2 focus:ring-brand-blue/20 bg-background/50 backdrop-blur-sm"
-                    placeholder="Ask me anything... I'm here to help! 🤖"
-                    disabled={isSubmitting}
-                  />
-                  
-                  {/* Quick Prompts */}
-                  {!prompt && (
-                    <div className="space-y-3">
-                      <p className="text-sm font-medium text-foreground">Try these quick prompts:</p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                        {quickPrompts.slice(0, 6).map((quickPrompt, index) => (
-                          <Button
-                            key={index}
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleQuickPrompt(quickPrompt)}
-                            className="text-xs h-8 px-3 hover:bg-brand-blue/10 hover:border-brand-blue/30 transition-colors text-left justify-start"
-                          >
-                            {quickPrompt}
-                          </Button>
-                        ))}
+              {/* Modern Chat Prompt Area */}
+              <div className="w-full max-w-4xl mx-auto">
+                <Card className="p-8 bg-gradient-to-br from-background to-muted/30 border-2 border-border/50 shadow-xl">
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-gradient-to-br from-primary to-primary/80 rounded-lg shadow-sm">
+                          <MessageSquare className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-semibold text-foreground">Chat Prompt</h3>
+                          <p className="text-sm text-muted-foreground">Start your conversation</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="secondary" className="text-xs font-medium">
+                          {getProviderIcon()} {getProviderName()}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {modelConfig.name}
+                        </Badge>
                       </div>
                     </div>
-                  )}
-                </div>
-                
-                <div className="flex items-center justify-between pt-4 border-t border-border/50">
-                  <div className="flex items-center gap-2">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
-                            <HelpCircle className="w-4 h-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent><p>Get help with prompts</p></TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
                     
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
-                            <Code className="w-4 h-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent><p>Code generation</p></TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <Textarea
+                      ref={textareaRef}
+                      value={prompt}
+                      onChange={(e) => setPrompt(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      className="min-h-[140px] text-base border-border/50 resize-none transition-all duration-300 focus:ring-2 focus:ring-primary/20 focus:border-primary/30 bg-background/80 backdrop-blur-sm rounded-lg shadow-sm"
+                      placeholder="Type your message here... (Press Enter to send, Shift+Enter for new line) ✨"
+                      disabled={isSubmitting}
+                    />
                     
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
-                            <Settings className="w-4 h-4" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent><p>Chat settings</p></TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                  
-                  <Button 
-                    onClick={handleRun}
-                    className="bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white gap-2 px-6 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={isSubmitting || !prompt.trim() || !currentApiKey}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4" />
-                        Send Message
-                      </>
+                    {/* Enhanced Quick Prompts */}
+                    {!prompt && (
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-primary" />
+                          <p className="text-sm font-medium text-foreground">Quick Start Prompts</p>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                          {quickPrompts.slice(0, 6).map((quickPrompt, index) => (
+                            <Button
+                              key={index}
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleQuickPrompt(quickPrompt)}
+                              className="text-xs h-auto p-3 hover:bg-primary/5 hover:border-primary/30 transition-all duration-200 text-left justify-start hover-lift"
+                            >
+                              <span className="line-clamp-2">{quickPrompt}</span>
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
                     )}
-                  </Button>
-                </div>
+                  </div>
+                
+                  <div className="flex items-center justify-between pt-6 border-t border-border/30">
+                    <div className="flex items-center gap-3">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200 rounded-full">
+                              <HelpCircle className="w-4 h-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent><p>Get help with prompts</p></TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200 rounded-full">
+                              <Code className="w-4 h-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent><p>Code generation</p></TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200 rounded-full">
+                              <Settings className="w-4 h-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent><p>Chat settings</p></TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    
+                    <Button 
+                      onClick={handleRun}
+                      className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground gap-2 px-8 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={isSubmitting || !prompt.trim() || !currentApiKey}
+                      size="lg"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-4 h-4" />
+                          Send Message
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </Card>
               </div>
 
-              {/* Enhanced API Key Warning */}
+              {/* Modern API Key Warning */}
               {!currentApiKey && (
-                <Alert className="w-full max-w-3xl mx-auto border-orange-200 bg-orange-50 dark:bg-orange-950/20 dark:border-orange-800">
-                  <AlertDescription className="flex items-center gap-2">
-                    <Settings className="w-4 h-4" />
+                <Alert className="w-full max-w-4xl mx-auto border-orange-300 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-950/30 dark:to-orange-900/20 dark:border-orange-700 shadow-md">
+                  <Settings className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                  <AlertDescription className="text-orange-800 dark:text-orange-200 font-medium">
                     Please enter your {getProviderName()} API key in the settings panel to start chatting.
                   </AlertDescription>
                 </Alert>
               )}
 
-              {/* Enhanced Test API Key Button */}
+              {/* Modern Test API Key Button */}
               {currentApiKey && (
-                <div className="w-full max-w-3xl mx-auto">
+                <div className="w-full max-w-4xl mx-auto">
                   <Button 
                     variant="outline" 
                     onClick={testAPIKey}
-                    className="w-full border-brand-blue/30 text-brand-blue hover:bg-brand-blue/10 transition-colors"
+                    className="w-full h-12 border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50 transition-all duration-200 shadow-sm hover:shadow-md"
+                    size="lg"
                   >
-                    <TestTube className="w-4 h-4 mr-2" />
-                    Test {getProviderName()} API Key
+                    <TestTube className="w-5 h-5 mr-2" />
+                    Test {getProviderName()} API Key Connection
                   </Button>
                 </div>
               )}
 
-              {/* Enhanced What's New Section */}
-              <div className="w-full max-w-4xl mx-auto">
-                <div className="flex items-center gap-2 mb-6">
-                  <Sparkles className="w-5 h-5 text-brand-blue" />
-                  <h2 className="text-xl font-semibold text-foreground">What's new</h2>
+              {/* Modern What's New Section */}
+              <div className="w-full max-w-6xl mx-auto">
+                <div className="text-center mb-8">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <div className="p-2 bg-gradient-to-br from-primary to-primary/80 rounded-lg">
+                      <Sparkles className="w-6 h-6 text-white" />
+                    </div>
+                    <h2 className="text-2xl font-semibold text-foreground">What's New</h2>
+                  </div>
+                  <p className="text-muted-foreground max-w-2xl mx-auto">
+                    Discover the latest AI-powered features and capabilities to enhance your conversations
+                  </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {newFeatures.map((feature, index) => (
-                    <FeatureCard
-                      key={index}
-                      title={feature.title}
-                      description={feature.description}
-                      icon={<span className="text-2xl">{feature.icon}</span>}
-                    />
+                    <Card key={index} className="p-6 hover:shadow-lg transition-all duration-300 hover-lift border-2 hover:border-primary/20">
+                      <div className="flex items-start gap-4">
+                        <div className="text-3xl">{feature.icon}</div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-foreground mb-2">{feature.title}</h3>
+                          <p className="text-sm text-muted-foreground">{feature.description}</p>
+                        </div>
+                      </div>
+                    </Card>
                   ))}
                 </div>
               </div>
