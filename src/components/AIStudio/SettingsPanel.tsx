@@ -24,6 +24,7 @@ export const SettingsPanel = () => {
   } = useAIStudio();
   
   const [isOpen, setIsOpen] = useState(true);
+  const [apiConfigOpen, setApiConfigOpen] = useState(true);
   const [toolsOpen, setToolsOpen] = useState(true);
   const [thinkingMode, setThinkingMode] = useState(false);
   const [thinkingBudget, setThinkingBudget] = useState(false);
@@ -167,13 +168,22 @@ export const SettingsPanel = () => {
       {/* Settings Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {/* API Configuration */}
-        <div>
-          <h3 className="text-sm font-medium text-foreground mb-3">API Configuration</h3>
-          <div className="space-y-4">
-            <APIKeyInput provider="openai" />
-            <APIKeyInput provider="google" />
-          </div>
-        </div>
+        <Collapsible open={apiConfigOpen} onOpenChange={setApiConfigOpen}>
+          <CollapsibleTrigger className="flex items-center justify-between w-full mb-3 cursor-pointer hover:bg-accent/50 rounded-md p-1 -m-1 transition-colors">
+            <h3 className="text-sm font-medium text-foreground">API Configuration</h3>
+            <ChevronDown 
+              className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${
+                apiConfigOpen ? 'rotate-0' : '-rotate-90'
+              }`} 
+            />
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div className="space-y-4">
+              <APIKeyInput provider="openai" />
+              <APIKeyInput provider="google" />
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
 
         <Separator />
 
