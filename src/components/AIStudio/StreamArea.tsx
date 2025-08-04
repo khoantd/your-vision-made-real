@@ -82,94 +82,78 @@ export const StreamArea = () => {
           }
         ]}
         action={
-          <div className="space-y-6 w-full max-w-4xl">
+          <div className="space-y-6 w-full max-w-4xl mx-auto">
+            {/* Enhanced Prompt Input */}
             {/* Enhanced Prompt Input */}
             <Card className="p-6 bg-gradient-to-br from-accent/20 to-accent/10 border border-border shadow-lg">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="flex-1 relative">
-                  <Input
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="Describe what you want to discuss or ask..."
-                    className="flex-1 border-border bg-background/50 backdrop-blur-sm pr-12"
-                  />
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                    <Badge variant="secondary" className="text-xs">
-                      {getProviderIcon()} {getProviderName()}
-                    </Badge>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="flex-1 relative">
+                    <Input
+                      value={prompt}
+                      onChange={(e) => setPrompt(e.target.value)}
+                      placeholder="Describe what you want to discuss or ask..."
+                      className="flex-1 border-border bg-background/50 backdrop-blur-sm pr-20 focus-ring"
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                      <Badge variant="secondary" className="text-xs">
+                        {getProviderIcon()} {getProviderName()}
+                      </Badge>
+                    </div>
                   </div>
+                  
+                  <Button 
+                    className="bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white gap-2 shadow-lg hover-lift"
+                    onClick={handleStartStream}
+                    disabled={!prompt.trim()}
+                  >
+                    <Play className="w-4 h-4" />
+                    Start Stream
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
                 </div>
                 
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent">
-                        <HelpCircle className="w-4 h-4" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Get help with streaming</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                {/* Enhanced Action Bar */}
+                <div className="flex items-center justify-between pt-2 border-t border-border/50">
+                  <div className="flex items-center gap-2">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent">
+                            <Code className="w-4 h-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent><p>Code generation</p></TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
 
-                <Button 
-                  className="bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white gap-2 shadow-lg"
-                  onClick={handleStartStream}
-                  disabled={!prompt.trim()}
-                >
-                  <Play className="w-4 h-4" />
-                  Start Stream
-                  <ArrowRight className="w-4 h-4" />
-                </Button>
-              </div>
-              
-              {/* Enhanced Action Bar */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent">
-                          <Code className="w-4 h-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Code generation</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent">
+                            <Share className="w-4 h-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent><p>Share conversation</p></TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
 
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent">
-                          <Share className="w-4 h-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Share conversation</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent">
+                            <RotateCcw className="w-4 h-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent><p>Reset stream</p></TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
 
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent">
-                          <RotateCcw className="w-4 h-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Reset stream</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Clock className="w-3 h-3" />
-                  <span>Ready to stream</span>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Clock className="w-3 h-3" />
+                    <span>Ready to stream</span>
+                  </div>
                 </div>
               </div>
             </Card>
@@ -279,25 +263,35 @@ export const StreamArea = () => {
               </Card>
             </div>
 
-            {/* Status Information */}
-            <div className="bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg p-4 border border-border">
+            {/* Enhanced Status Information */}
+            <Card className="bg-gradient-to-r from-accent/10 to-accent/5 p-4 border border-border shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="text-sm text-muted-foreground">Stream Ready</span>
+                    <span className="text-sm font-medium text-foreground">Stream Ready</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Users className="w-4 h-4 text-muted-foreground" />
                     <span className="text-sm text-muted-foreground">Model: {modelConfig.name}</span>
                   </div>
+                  <Badge variant="outline" className="text-xs">
+                    {getProviderIcon()} {getProviderName()}
+                  </Badge>
                 </div>
-                <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Settings
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                        <Settings className="w-4 h-4 mr-2" />
+                        Settings
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent><p>Stream settings</p></TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
-            </div>
+            </Card>
           </div>
         }
       />
