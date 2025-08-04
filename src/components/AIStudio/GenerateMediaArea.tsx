@@ -138,178 +138,167 @@ export const GenerateMediaArea = () => {
   };
 
   return (
-    <div className="flex-1 bg-chat-bg overflow-y-auto">
-      <div className="max-w-7xl mx-auto p-8">
-        {/* Enhanced Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="p-3 bg-gradient-to-br from-brand-blue to-purple-600 rounded-full">
-              <Sparkles className="w-8 h-8 text-white" />
+    <BaseLayout 
+      title="Generate Media" 
+      subtitle="Create stunning images, videos, and audio using advanced AI models"
+    >
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-7xl mx-auto p-8">
+          {/* Enhanced Model Cards */}
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-semibold text-foreground">Available Models</h2>
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="text-xs">
+                  <Zap className="w-3 h-3 mr-1" />
+                  Latest Models
+                </Badge>
+              </div>
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-brand-blue to-purple-600 bg-clip-text text-transparent">
-              Generate Media
-            </h1>
-          </div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Create stunning images, videos, and audio using advanced AI models. 
-            From simple prompts to complex sequences, bring your ideas to life.
-          </p>
-        </div>
 
-        {/* Enhanced Model Cards */}
-        <div className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold text-foreground">Available Models</h2>
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="text-xs">
-                <Zap className="w-3 h-3 mr-1" />
-                Latest Models
-              </Badge>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {MEDIA_MODELS.map((model) => (
-              <Card 
-                key={model.id} 
-                className={cn(
-                  "p-6 cursor-pointer transition-all duration-200 border-2 hover:border-brand-blue/20 hover:shadow-lg",
-                  selectedModel === model.id && "border-brand-blue/40 bg-brand-blue/5"
-                )}
-                onClick={() => setSelectedModel(model.id)}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={cn("p-3 rounded-lg", getTypeColor(model.type))}>
-                    {getTypeIcon(model.type)}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="font-semibold text-foreground">{model.name}</h3>
-                      {model.badge && (
-                        <Badge variant="secondary" className="text-xs">
-                          {model.badge}
-                        </Badge>
-                      )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {MEDIA_MODELS.map((model) => (
+                <Card 
+                  key={model.id} 
+                  className={cn(
+                    "p-6 cursor-pointer transition-all duration-200 border-2 hover:border-brand-blue/20 hover:shadow-lg",
+                    selectedModel === model.id && "border-brand-blue/40 bg-brand-blue/5"
+                  )}
+                  onClick={() => setSelectedModel(model.id)}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className={cn("p-3 rounded-lg", getTypeColor(model.type))}>
+                      {getTypeIcon(model.type)}
                     </div>
-                    <p className="text-sm text-muted-foreground mb-3">{model.description}</p>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Clock className="w-3 h-3" />
-                      <span>Ready to use</span>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <h3 className="font-semibold text-foreground">{model.name}</h3>
+                        {model.badge && (
+                          <Badge variant="secondary" className="text-xs">
+                            {model.badge}
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-3">{model.description}</p>
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        <span>Ready to use</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Enhanced Examples Section */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <h2 className="text-2xl font-semibold text-foreground">Example Prompts</h2>
-              <Badge variant="secondary" className="bg-brand-blue-light text-brand-blue">
-                <Star className="w-3 h-3 mr-1" />
-                Popular
-              </Badge>
+                </Card>
+              ))}
             </div>
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-              <Settings className="w-4 h-4 mr-2" />
-              Settings
+          </div>
+
+          {/* Enhanced Examples Section */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <h2 className="text-2xl font-semibold text-foreground">Example Prompts</h2>
+                <Badge variant="secondary" className="bg-brand-blue-light text-brand-blue">
+                  <Star className="w-3 h-3 mr-1" />
+                  Popular
+                </Badge>
+              </div>
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                <Settings className="w-4 h-4 mr-2" />
+                Settings
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {examples.map((example) => (
+                <Card 
+                  key={example.id} 
+                  className={cn(
+                    "group overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-brand-blue/20",
+                    hoveredExample === example.id && "scale-105"
+                  )}
+                  onMouseEnter={() => setHoveredExample(example.id)}
+                  onMouseLeave={() => setHoveredExample(null)}
+                >
+                  <div className="relative">
+                    <img 
+                      src={example.image} 
+                      alt={example.description}
+                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute top-3 left-3">
+                      <div className="w-8 h-8 bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center">
+                        <Play className="w-4 h-4 text-white" />
+                      </div>
+                    </div>
+                    <div className="absolute top-3 right-3">
+                      <Badge variant="secondary" className="text-xs">
+                        {example.difficulty}
+                      </Badge>
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </div>
+                  <div className="p-4">
+                    <p className="text-sm text-foreground line-clamp-3 mb-3">{example.description}</p>
+                    
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        <span>{example.time}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                        <span>{example.rating}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mt-3">
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <Users className="w-3 h-3" />
+                        <span>{example.users.toLocaleString()}</span>
+                      </div>
+                      <Button size="sm" className="h-7 px-3 text-xs bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white">
+                        Try
+                        <ArrowRight className="w-3 h-3 ml-1" />
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {/* Enhanced Load More */}
+          <div className="text-center">
+            <Button 
+              variant="outline" 
+              className="bg-white border-border hover:bg-sidebar-hover hover:border-brand-blue/20 transition-all duration-200"
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              Load More Examples
+              <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {examples.map((example) => (
-              <Card 
-                key={example.id} 
-                className={cn(
-                  "group overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-brand-blue/20",
-                  hoveredExample === example.id && "scale-105"
-                )}
-                onMouseEnter={() => setHoveredExample(example.id)}
-                onMouseLeave={() => setHoveredExample(null)}
-              >
-                <div className="relative">
-                  <img 
-                    src={example.image} 
-                    alt={example.description}
-                    className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <div className="w-8 h-8 bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center">
-                      <Play className="w-4 h-4 text-white" />
-                    </div>
-                  </div>
-                  <div className="absolute top-3 right-3">
-                    <Badge variant="secondary" className="text-xs">
-                      {example.difficulty}
-                    </Badge>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          {/* Status Information */}
+          <div className="mt-12 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg p-4 border border-border">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm text-muted-foreground">Media Generation Ready</span>
                 </div>
-                <div className="p-4">
-                  <p className="text-sm text-foreground line-clamp-3 mb-3">{example.description}</p>
-                  
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      <span>{example.time}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                      <span>{example.rating}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between mt-3">
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Users className="w-3 h-3" />
-                      <span>{example.users.toLocaleString()}</span>
-                    </div>
-                    <Button size="sm" className="h-7 px-3 text-xs bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white">
-                      Try
-                      <ArrowRight className="w-3 h-3 ml-1" />
-                    </Button>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Model: {modelConfig.name}</span>
                 </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Enhanced Load More */}
-        <div className="text-center">
-          <Button 
-            variant="outline" 
-            className="bg-white border-border hover:bg-sidebar-hover hover:border-brand-blue/20 transition-all duration-200"
-          >
-            <Sparkles className="w-4 h-4 mr-2" />
-            Load More Examples
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
-        </div>
-
-        {/* Status Information */}
-        <div className="mt-12 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg p-4 border border-border">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-muted-foreground">Media Generation Ready</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Model: {modelConfig.name}</span>
-              </div>
+              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                <Settings className="w-4 h-4 mr-2" />
+                Advanced Settings
+              </Button>
             </div>
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-              <Settings className="w-4 h-4 mr-2" />
-              Advanced Settings
-            </Button>
           </div>
         </div>
       </div>
-    </div>
+    </BaseLayout>
   );
 };
