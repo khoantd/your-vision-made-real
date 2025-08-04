@@ -2,7 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { X, ChevronDown, Wrench } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { X, ChevronDown, ChevronRight, Wrench } from "lucide-react";
 import { useState } from "react";
 import { CHAT_MODELS } from "@/constants/models";
 
@@ -16,6 +19,17 @@ export const SettingsPanel = () => {
   const [functionCalling, setFunctionCalling] = useState(false);
   const [googleSearch, setGoogleSearch] = useState(false);
   const [urlContext, setUrlContext] = useState(false);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+  const [topP, setTopP] = useState([0.95]);
+  const [topK, setTopK] = useState([40]);
+  const [maxTokens, setMaxTokens] = useState([8192]);
+  const [frequencyPenalty, setFrequencyPenalty] = useState([0]);
+  const [presencePenalty, setPresencePenalty] = useState([0]);
+  const [stopSequences, setStopSequences] = useState("");
+  const [systemPrompt, setSystemPrompt] = useState("");
+  const [apiTimeout, setApiTimeout] = useState([30]);
+  const [streaming, setStreaming] = useState(true);
+  const [logProbabilities, setLogProbabilities] = useState(false);
 
   if (!isOpen) {
     return (
@@ -169,12 +183,189 @@ export const SettingsPanel = () => {
         </div>
 
         {/* Advanced Settings */}
-        <div>
-          <Button variant="ghost" className="w-full justify-between text-sm text-foreground">
-            Advanced settings
-            <ChevronDown className="w-4 h-4" />
-          </Button>
-        </div>
+        <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
+          <CollapsibleTrigger asChild>
+            <Button variant="ghost" className="w-full justify-between text-sm text-foreground">
+              Advanced settings
+              {advancedOpen ? (
+                <ChevronDown className="w-4 h-4" />
+              ) : (
+                <ChevronRight className="w-4 h-4" />
+              )}
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-4 mt-4">
+            {/* Top P */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Top P
+              </label>
+              <div className="px-2">
+                <Slider
+                  value={topP}
+                  onValueChange={setTopP}
+                  max={1}
+                  min={0}
+                  step={0.01}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>0</span>
+                  <span className="font-medium">{topP[0]}</span>
+                  <span>1</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Top K */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Top K
+              </label>
+              <div className="px-2">
+                <Slider
+                  value={topK}
+                  onValueChange={setTopK}
+                  max={100}
+                  min={1}
+                  step={1}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>1</span>
+                  <span className="font-medium">{topK[0]}</span>
+                  <span>100</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Max Tokens */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Max Tokens
+              </label>
+              <div className="px-2">
+                <Slider
+                  value={maxTokens}
+                  onValueChange={setMaxTokens}
+                  max={32768}
+                  min={1}
+                  step={1}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>1</span>
+                  <span className="font-medium">{maxTokens[0]}</span>
+                  <span>32K</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Frequency Penalty */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Frequency Penalty
+              </label>
+              <div className="px-2">
+                <Slider
+                  value={frequencyPenalty}
+                  onValueChange={setFrequencyPenalty}
+                  max={2}
+                  min={-2}
+                  step={0.1}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>-2</span>
+                  <span className="font-medium">{frequencyPenalty[0]}</span>
+                  <span>2</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Presence Penalty */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Presence Penalty
+              </label>
+              <div className="px-2">
+                <Slider
+                  value={presencePenalty}
+                  onValueChange={setPresencePenalty}
+                  max={2}
+                  min={-2}
+                  step={0.1}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>-2</span>
+                  <span className="font-medium">{presencePenalty[0]}</span>
+                  <span>2</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Stop Sequences */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Stop Sequences
+              </label>
+              <Input
+                placeholder="Enter stop sequences (comma separated)"
+                value={stopSequences}
+                onChange={(e) => setStopSequences(e.target.value)}
+                className="text-sm"
+              />
+            </div>
+
+            {/* System Prompt */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                Custom System Prompt
+              </label>
+              <Textarea
+                placeholder="Enter custom system prompt..."
+                value={systemPrompt}
+                onChange={(e) => setSystemPrompt(e.target.value)}
+                className="text-sm min-h-20"
+              />
+            </div>
+
+            {/* API Timeout */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                API Timeout (seconds)
+              </label>
+              <div className="px-2">
+                <Slider
+                  value={apiTimeout}
+                  onValueChange={setApiTimeout}
+                  max={300}
+                  min={5}
+                  step={5}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>5s</span>
+                  <span className="font-medium">{apiTimeout[0]}s</span>
+                  <span>5m</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Advanced Toggles */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-foreground">Streaming</span>
+                <Switch checked={streaming} onCheckedChange={setStreaming} />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-foreground">Log probabilities</span>
+                <Switch checked={logProbabilities} onCheckedChange={setLogProbabilities} />
+              </div>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
       </div>
     </div>
   );
