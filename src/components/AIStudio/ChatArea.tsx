@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Card } from "@/components/ui/card";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Play, HelpCircle, Code, Share, RotateCcw, MoreHorizontal, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, Edit, X, Copy, Maximize2, RotateCcw as Refresh, Send, TestTube, Sparkles, MessageSquare, Bot, User, Settings } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
@@ -223,287 +222,234 @@ export const ChatArea = () => {
       subtitle={`Powered by ${getProviderName()} • ${modelConfig.name}`}
     >
       {!isRunning && chatState.messages.length === 0 ? (
-        <div className="flex-1 flex flex-col justify-center items-center min-h-screen p-8">
-          <div className="w-full max-w-6xl mx-auto space-y-12">
-            {/* Perfectly Centered Hero Section */}
-            <div className="text-center space-y-6">
-              <div className="flex justify-center mb-6">
-                <div className="p-6 bg-gradient-to-br from-primary via-primary/90 to-primary/80 rounded-2xl shadow-2xl">
-                  <MessageSquare className="w-16 h-16 text-white" />
-                </div>
-              </div>
-              <div className="space-y-4">
-                <h1 className="text-4xl font-bold text-foreground tracking-tight">
-                  AI Chat Ready
-                </h1>
-                <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                  Start a conversation with your AI assistant using natural language prompts
-                </p>
-              </div>
-            </div>
-
-            {/* Perfectly Justified Features Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-              <div className="text-center space-y-3 p-6 rounded-xl bg-muted/30 border border-border/50">
-                <div className="flex justify-center">
-                  <div className="p-3 bg-primary/10 rounded-lg">
-                    <Sparkles className="w-6 h-6 text-primary" />
-                  </div>
-                </div>
-                <h3 className="text-lg font-semibold text-foreground">Smart Responses</h3>
-                <p className="text-muted-foreground">Get intelligent answers to any question</p>
-              </div>
-              <div className="text-center space-y-3 p-6 rounded-xl bg-muted/30 border border-border/50">
-                <div className="flex justify-center">
-                  <div className="p-3 bg-primary/10 rounded-lg">
-                    <Code className="w-6 h-6 text-primary" />
-                  </div>
-                </div>
-                <h3 className="text-lg font-semibold text-foreground">Code Generation</h3>
-                <p className="text-muted-foreground">Generate and debug code in any language</p>
-              </div>
-              <div className="text-center space-y-3 p-6 rounded-xl bg-muted/30 border border-border/50">
-                <div className="flex justify-center">
-                  <div className="p-3 bg-primary/10 rounded-lg">
-                    <MessageSquare className="w-6 h-6 text-primary" />
-                  </div>
-                </div>
-                <h3 className="text-lg font-semibold text-foreground">Natural Conversation</h3>
-                <p className="text-muted-foreground">Chat naturally with context awareness</p>
-              </div>
-            </div>
-
-            {/* Perfectly Centered Chat Prompt Card */}
-            <div className="flex justify-center">
-              <Card className="w-full max-w-4xl p-8 bg-gradient-to-br from-background via-background to-muted/20 border-2 border-border/50 shadow-2xl">
-                <div className="space-y-8">
-                  {/* Card Header - Perfectly Justified */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-gradient-to-br from-primary to-primary/80 rounded-xl shadow-lg">
-                        <MessageSquare className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <h2 className="text-2xl font-bold text-foreground">Chat Prompt</h2>
-                        <p className="text-muted-foreground">Start your conversation</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Badge variant="secondary" className="px-3 py-1 font-medium">
-                        {getProviderIcon()} {getProviderName()}
-                      </Badge>
-                      <Badge variant="outline" className="px-3 py-1">
-                        {modelConfig.name}
-                      </Badge>
-                    </div>
+        <EmptyState
+          icon={<div className="p-4 bg-gradient-to-br from-brand-blue to-purple-600 rounded-full">
+            <MessageSquare className="w-12 h-12 text-white" />
+          </div>}
+          title="AI Chat Ready"
+          description="Start a conversation with your AI assistant using natural language prompts."
+          features={[
+            {
+              icon: <Sparkles className="w-5 h-5" />,
+              title: "Smart Responses",
+              description: "Get intelligent answers to any question"
+            },
+            {
+              icon: <Code className="w-5 h-5" />,
+              title: "Code Generation",
+              description: "Generate and debug code in any language"
+            },
+            {
+              icon: <MessageSquare className="w-5 h-5" />,
+              title: "Natural Conversation",
+              description: "Chat naturally with context awareness"
+            }
+          ]}
+          action={
+            <div className="space-y-6 w-full max-w-4xl mx-auto">
+              {/* Enhanced Chat Prompt Area */}
+              {/* Enhanced Chat Prompt Area */}
+              <div className="w-full max-w-3xl mx-auto p-6 bg-gradient-to-br from-accent/20 to-accent/10 border border-border rounded-xl shadow-lg">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <label className="text-lg font-medium text-foreground">
+                      Chat Prompt
+                    </label>
+                    <Badge variant="secondary" className="text-xs">
+                      {getProviderIcon()} {getProviderName()}
+                    </Badge>
+                    <Badge variant="outline" className="text-xs">
+                      {modelConfig.name}
+                    </Badge>
                   </div>
                   
-                  {/* Textarea - Full Width Justified */}
-                  <div className="space-y-2">
-                    <Textarea
-                      ref={textareaRef}
-                      value={prompt}
-                      onChange={(e) => setPrompt(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      className="min-h-[160px] text-lg leading-relaxed border-border/50 resize-none transition-all duration-300 focus:ring-2 focus:ring-primary/20 focus:border-primary/30 bg-background/80 backdrop-blur-sm rounded-xl shadow-sm"
-                      placeholder="Type your message here... (Press Enter to send, Shift+Enter for new line) ✨"
-                      disabled={isSubmitting}
-                    />
-                    <p className="text-xs text-muted-foreground text-right">
-                      Press Enter to send • Shift+Enter for new line
-                    </p>
-                  </div>
+                  <Textarea
+                    ref={textareaRef}
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    className="min-h-[120px] border-border resize-none transition-all duration-200 focus:ring-2 focus:ring-brand-blue/20 bg-background/50 backdrop-blur-sm"
+                    placeholder="Ask me anything... I'm here to help! 🤖"
+                    disabled={isSubmitting}
+                  />
                   
-                  {/* Quick Prompts - Perfectly Aligned Grid */}
+                  {/* Quick Prompts */}
                   {!prompt && (
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-center gap-2">
-                        <Sparkles className="w-5 h-5 text-primary" />
-                        <h3 className="text-lg font-medium text-foreground">Quick Start Prompts</h3>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="space-y-3">
+                      <p className="text-sm font-medium text-foreground">Try these quick prompts:</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                         {quickPrompts.slice(0, 6).map((quickPrompt, index) => (
                           <Button
                             key={index}
                             variant="outline"
+                            size="sm"
                             onClick={() => handleQuickPrompt(quickPrompt)}
-                            className="h-auto p-4 text-sm hover:bg-primary/5 hover:border-primary/30 transition-all duration-200 text-left justify-start hover-lift"
+                            className="text-xs h-8 px-3 hover:bg-brand-blue/10 hover:border-brand-blue/30 transition-colors text-left justify-start"
                           >
-                            <span className="line-clamp-2 leading-relaxed">{quickPrompt}</span>
+                            {quickPrompt}
                           </Button>
                         ))}
                       </div>
                     </div>
                   )}
-
-                  {/* Action Bar - Perfectly Justified */}
-                  <div className="flex items-center justify-between pt-6 border-t border-border/30">
-                    <div className="flex items-center gap-4">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button size="icon" variant="ghost" className="h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200 rounded-full">
-                              <HelpCircle className="w-5 h-5" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent><p>Get help with prompts</p></TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                      
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button size="icon" variant="ghost" className="h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200 rounded-full">
-                              <Code className="w-5 h-5" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent><p>Code generation</p></TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                      
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button size="icon" variant="ghost" className="h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all duration-200 rounded-full">
-                              <Settings className="w-5 h-5" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent><p>Chat settings</p></TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
+                </div>
+                
+                <div className="flex items-center justify-between pt-4 border-t border-border/50">
+                  <div className="flex items-center gap-2">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
+                            <HelpCircle className="w-4 h-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent><p>Get help with prompts</p></TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                     
-                    <Button 
-                      onClick={handleRun}
-                      className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground gap-3 px-10 py-4 text-lg rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
-                      disabled={isSubmitting || !prompt.trim() || !currentApiKey}
-                      size="lg"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          Sending...
-                        </>
-                      ) : (
-                        <>
-                          <Send className="w-5 h-5" />
-                          Send Message
-                        </>
-                      )}
-                    </Button>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
+                            <Code className="w-4 h-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent><p>Code generation</p></TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button size="icon" variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
+                            <Settings className="w-4 h-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent><p>Chat settings</p></TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
+                  
+                  <Button 
+                    onClick={handleRun}
+                    className="bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white gap-2 px-6 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isSubmitting || !prompt.trim() || !currentApiKey}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        Send Message
+                      </>
+                    )}
+                  </Button>
                 </div>
-              </Card>
-            </div>
+              </div>
 
-            {/* Perfectly Centered Alerts and Actions */}
-            <div className="space-y-6">
-              {/* API Key Warning - Centered */}
+              {/* Enhanced API Key Warning */}
               {!currentApiKey && (
-                <div className="flex justify-center">
-                  <Alert className="max-w-2xl border-orange-300 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-950/30 dark:to-orange-900/20 dark:border-orange-700 shadow-lg">
-                    <Settings className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-                    <AlertDescription className="text-orange-800 dark:text-orange-200 font-medium text-center">
-                      Please enter your {getProviderName()} API key in the settings panel to start chatting.
-                    </AlertDescription>
-                  </Alert>
-                </div>
+                <Alert className="w-full max-w-3xl mx-auto border-orange-200 bg-orange-50 dark:bg-orange-950/20 dark:border-orange-800">
+                  <AlertDescription className="flex items-center gap-2">
+                    <Settings className="w-4 h-4" />
+                    Please enter your {getProviderName()} API key in the settings panel to start chatting.
+                  </AlertDescription>
+                </Alert>
               )}
 
-              {/* Test API Key Button - Centered */}
+              {/* Enhanced Test API Key Button */}
               {currentApiKey && (
-                <div className="flex justify-center">
+                <div className="w-full max-w-3xl mx-auto">
                   <Button 
                     variant="outline" 
                     onClick={testAPIKey}
-                    className="h-12 px-8 border-primary/30 text-primary hover:bg-primary/10 hover:border-primary/50 transition-all duration-200 shadow-sm hover:shadow-md"
-                    size="lg"
+                    className="w-full border-brand-blue/30 text-brand-blue hover:bg-brand-blue/10 transition-colors"
                   >
-                    <TestTube className="w-5 h-5 mr-3" />
-                    Test {getProviderName()} API Key Connection
+                    <TestTube className="w-4 h-4 mr-2" />
+                    Test {getProviderName()} API Key
                   </Button>
                 </div>
               )}
-            </div>
 
-            {/* Perfectly Arranged What's New Section */}
-            <div className="space-y-8">
-              <div className="text-center">
-                <div className="flex items-center justify-center gap-4 mb-6">
-                  <div className="p-3 bg-gradient-to-br from-primary to-primary/80 rounded-xl shadow-lg">
-                    <Sparkles className="w-7 h-7 text-white" />
-                  </div>
-                  <h2 className="text-3xl font-bold text-foreground">What's New</h2>
+              {/* Enhanced What's New Section */}
+              <div className="w-full max-w-4xl mx-auto">
+                <div className="flex items-center gap-2 mb-6">
+                  <Sparkles className="w-5 h-5 text-brand-blue" />
+                  <h2 className="text-xl font-semibold text-foreground">What's new</h2>
                 </div>
-                <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-                  Discover the latest AI-powered features and capabilities to enhance your conversations
-                </p>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {newFeatures.map((feature, index) => (
-                  <Card key={index} className="p-8 hover:shadow-xl transition-all duration-300 hover-lift border-2 hover:border-primary/20 bg-gradient-to-br from-background to-muted/10">
-                    <div className="flex items-start gap-6">
-                      <div className="text-4xl flex-shrink-0">{feature.icon}</div>
-                      <div className="space-y-3">
-                        <h3 className="text-xl font-bold text-foreground">{feature.title}</h3>
-                        <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {newFeatures.map((feature, index) => (
+                    <FeatureCard
+                      key={index}
+                      title={feature.title}
+                      description={feature.description}
+                      icon={<span className="text-2xl">{feature.icon}</span>}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          }
+        />
       ) : (
-        /* Perfectly Arranged Chat Conversation View */
-        <div className="flex-1 flex flex-col h-full max-w-7xl mx-auto w-full">
-          {/* Perfectly Justified Header */}
-          <div className="flex items-center justify-between p-6 border-b border-border bg-background/80 backdrop-blur-sm">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-gradient-to-br from-primary to-primary/80 rounded-xl shadow-lg">
-                <MessageSquare className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">Chat Conversation</h1>
-                <p className="text-sm text-muted-foreground flex items-center gap-2">
-                  {getProviderIcon()} {getProviderName()} • {modelConfig.name}
-                </p>
+        // Enhanced Chat conversation view
+        <div className="flex-1 flex flex-col h-full">
+          {/* Enhanced Header */}
+          <div className="flex items-center justify-between p-4 border-b border-border bg-background/50 backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-gradient-to-br from-brand-blue to-purple-600 rounded-lg">
+                  <MessageSquare className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-semibold text-foreground">Chat Conversation</h1>
+                  <p className="text-xs text-muted-foreground">
+                    {getProviderIcon()} {getProviderName()} • {modelConfig.name}
+                  </p>
+                </div>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button size="icon" variant="ghost" className="h-10 w-10 text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200 rounded-full">
-                      <Copy className="w-5 h-5" />
+                    <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
+                      <Copy className="w-4 h-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent><p>Copy conversation</p></TooltipContent>
+                  <TooltipContent>
+                    <p>Copy conversation</p>
+                  </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
               
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button size="icon" variant="ghost" className="h-10 w-10 text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200 rounded-full">
-                      <Share className="w-5 h-5" />
+                    <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
+                      <Share className="w-4 h-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent><p>Share conversation</p></TooltipContent>
+                  <TooltipContent>
+                    <p>Share conversation</p>
+                  </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
               
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button size="icon" variant="ghost" className="h-10 w-10 text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200 rounded-full">
-                      <Refresh className="w-5 h-5" />
+                    <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
+                      <Refresh className="w-4 h-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent><p>Regenerate response</p></TooltipContent>
+                  <TooltipContent>
+                    <p>Regenerate response</p>
+                  </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
               
@@ -513,35 +459,35 @@ export const ChatArea = () => {
                     <Button 
                       size="icon" 
                       variant="ghost" 
-                      className="h-10 w-10 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200 rounded-full"
+                      className="h-8 w-8 text-muted-foreground hover:text-red-500 hover:bg-red-50 transition-colors"
                       onClick={handleClearClick}
                     >
-                      <X className="w-5 h-5" />
+                      <X className="w-4 h-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent><p>Clear chat</p></TooltipContent>
+                  <TooltipContent>
+                    <p>Clear chat</p>
+                  </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
           </div>
 
-          {/* Perfectly Centered Chat Messages */}
-          <ScrollArea ref={scrollAreaRef} className="flex-1 px-6 py-8">
-            <div className="max-w-4xl mx-auto space-y-8">
+          {/* Enhanced Chat messages */}
+          <ScrollArea ref={scrollAreaRef} className="flex-1 p-4">
+            <div className="space-y-6 max-w-4xl mx-auto">
               {chatState.messages.map((message) => (
                 <ChatMessage key={message.id} message={message} />
               ))}
               {chatState.isLoading && (
-                <div className="flex items-center justify-center">
-                  <div className="flex items-center gap-4 p-6 bg-accent/20 rounded-2xl border border-border shadow-sm">
-                    <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
-                    <div className="flex items-center gap-3">
-                      <span className="text-muted-foreground font-medium text-lg">Assistant is thinking</span>
-                      <div className="flex gap-1">
-                        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                        <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                      </div>
+                <div className="flex items-center gap-3 p-4 bg-accent/20 rounded-lg border border-border">
+                  <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground font-medium">Assistant is thinking</span>
+                    <div className="flex gap-1">
+                      <div className="w-1 h-1 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="w-1 h-1 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                      <div className="w-1 h-1 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                     </div>
                   </div>
                 </div>
@@ -549,65 +495,59 @@ export const ChatArea = () => {
             </div>
           </ScrollArea>
 
-          {/* Perfectly Centered Error Display */}
+          {/* Enhanced Error Display */}
           {chatState.error && (
-            <div className="px-6 mb-4">
-              <div className="max-w-4xl mx-auto">
-                <Alert className="border-destructive/50 bg-destructive/10">
-                  <X className="w-5 h-5 text-destructive" />
-                  <AlertDescription className="text-destructive font-medium">
-                    {chatState.error}
-                  </AlertDescription>
-                </Alert>
-              </div>
-            </div>
+            <Alert className="mx-4 mb-4 border-red-200 bg-red-50">
+              <AlertDescription className="text-red-600 flex items-center gap-2">
+                <X className="w-4 h-4" />
+                {chatState.error}
+              </AlertDescription>
+            </Alert>
           )}
 
-          {/* Perfectly Justified Bottom Input */}
-          <div className="p-6 border-t border-border bg-background/80 backdrop-blur-sm">
+          {/* Enhanced Bottom input */}
+          <div className="p-4 border-t border-border bg-background/80 backdrop-blur-sm">
             <div className="max-w-4xl mx-auto">
-              <div className="flex items-end gap-4 p-4 border-2 border-border/50 rounded-2xl bg-background/50 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
-                <div className="flex-1 space-y-2">
+              <div className="flex items-end gap-3 p-4 border border-border rounded-xl bg-background/50 backdrop-blur-sm shadow-sm">
+                <div className="flex-1">
                   <Textarea
                     ref={textareaRef}
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder="Type your message here... (Press Enter to send, Shift+Enter for new line)"
-                    className="flex-1 border-0 bg-transparent resize-none min-h-[48px] max-h-[200px] focus-visible:ring-0 text-base focus-ring"
+                    placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
+                    className="flex-1 border-0 bg-transparent resize-none min-h-[44px] max-h-[200px] focus-visible:ring-0 text-sm focus-ring"
                     rows={1}
                     disabled={isSubmitting}
                   />
                   {isTyping && (
-                    <div className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">Typing...</span>
+                    <div className="flex items-center gap-2 mt-2">
+                      <User className="w-3 h-3 text-muted-foreground" />
+                      <span className="text-xs text-muted-foreground">Typing...</span>
                     </div>
                   )}
                 </div>
                 
                 <Button 
-                  className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
+                  size="sm" 
+                  className="bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
                   onClick={handleSubmit}
                   disabled={isSubmitting || !prompt.trim() || !currentApiKey}
-                  size="lg"
                 >
                   {isSubmitting ? (
                     <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
                       Sending
                     </>
                   ) : (
                     <>
-                      <Send className="w-5 h-5 mr-2" />
+                      <Send className="w-4 h-4 mr-2" />
                       Send
                     </>
                   )}
                 </Button>
               </div>
-              
-              {/* Perfectly Centered Disclaimer */}
-              <p className="text-sm text-muted-foreground mt-4 text-center leading-relaxed">
+              <p className="text-xs text-muted-foreground mt-3 text-center">
                 {getProviderName()} AI models may make mistakes, so double-check outputs.
               </p>
             </div>
