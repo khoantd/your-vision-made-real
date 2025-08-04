@@ -4,6 +4,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Play, HelpCircle, Code, Share, RotateCcw, MoreHorizontal, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, Edit, X, Copy, Maximize2, RotateCcw as Refresh, Send, TestTube, Sparkles, MessageSquare, Bot, User, Settings } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { FeatureCard } from "@/components/common/FeatureCard";
+import { BaseLayout } from "@/components/common/BaseLayout";
+import { EmptyState } from "@/components/common/EmptyState";
 import { useAIStudio } from "@/contexts/AIStudioContext";
 import { useChat } from "@/hooks/useChat";
 import { ScrollArea } from "@/components/ui/scroll-area";

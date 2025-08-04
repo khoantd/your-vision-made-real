@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { Search, MoreHorizontal, FileText, FolderOpen } from "lucide-react";
+import { Search, MoreHorizontal, FileText, FolderOpen, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { BaseLayout } from "@/components/common/BaseLayout";
+import { EmptyState } from "@/components/common/EmptyState";
+import { ContentCard } from "@/components/common/ContentCard";
 
 interface HistoryItem {
   id: string;

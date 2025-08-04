@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Play } from "lucide-react";
+import { BaseLayout } from "@/components/common/BaseLayout";
+import { EmptyState } from "@/components/common/EmptyState";
+import { ContentCard } from "@/components/common/ContentCard";
+import { Play, Image } from "lucide-react";
 import { useState } from "react";
 import { ModelCard } from "@/components/common/ModelCard";
 import { MEDIA_MODELS, EXAMPLE_PROMPTS } from "@/constants/models";
