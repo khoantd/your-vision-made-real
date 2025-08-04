@@ -110,13 +110,22 @@ export const AIStudioProvider: React.FC<AIStudioProviderProps> = ({ children }) 
       console.log(`Testing API key for ${provider}...`);
       
       if (provider === "openai") {
+        // Validate format first
+        if (!key.startsWith("sk-") || key.length < 40) {
+          console.error("Invalid OpenAI API key format");
+          return false;
+        }
+        
         const response = await fetch("https://api.openai.com/v1/models", {
           headers: {
             "Authorization": `Bearer ${key}`,
             "Content-Type": "application/json"
           }
         });
-        return response.ok;
+        
+        const result = response.ok;
+        console.log(`API key test result for ${provider}:`, result);
+        return result;
       } else if (provider === "google") {
         // Basic validation for Google API key format
         return key.startsWith("AIza") && key.length > 20;
