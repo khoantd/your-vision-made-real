@@ -118,6 +118,8 @@ export const HistoryArea = () => {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState("");
 
   // Load conversations from Supabase
   useEffect(() => {
@@ -234,6 +236,38 @@ export const HistoryArea = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleEditConversation = (conversationId: string, currentTitle: string) => {
+    setEditingId(conversationId);
+    setEditingTitle(currentTitle);
+  };
+
+  const handleSaveEdit = async (conversationId: string) => {
+    try {
+      await conversationService.updateConversationTitle(conversationId, editingTitle);
+      setConversations(prev => prev.map(conv => 
+        conv.id === conversationId ? { ...conv, title: editingTitle } : conv
+      ));
+      setEditingId(null);
+      setEditingTitle("");
+      toast({
+        title: "Success",
+        description: "Conversation title updated successfully",
+      });
+    } catch (error) {
+      console.error('Failed to update conversation:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update conversation title",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditingTitle("");
   };
 
   if (isLoading) {
@@ -389,11 +423,28 @@ export const HistoryArea = () => {
                         {getTypeIcon(item.type)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-foreground truncate">{item.name}</h3>
-                          {item.isStarred && <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />}
-                          {item.isShared && <Share2 className="w-3 h-3 text-blue-500" />}
-                        </div>
+                         <div className="flex items-center gap-2 mb-1">
+                           {editingId === item.id ? (
+                             <div className="flex items-center gap-2 flex-1">
+                               <Input
+                                 value={editingTitle}
+                                 onChange={(e) => setEditingTitle(e.target.value)}
+                                 onKeyDown={(e) => {
+                                   if (e.key === 'Enter') handleSaveEdit(item.id);
+                                   if (e.key === 'Escape') handleCancelEdit();
+                                 }}
+                                 className="text-sm h-6"
+                                 autoFocus
+                               />
+                               <Button size="sm" onClick={() => handleSaveEdit(item.id)} className="h-6 px-2 text-xs">Save</Button>
+                               <Button size="sm" variant="ghost" onClick={handleCancelEdit} className="h-6 px-2 text-xs">Cancel</Button>
+                             </div>
+                           ) : (
+                             <h3 className="font-semibold text-foreground truncate">{item.name}</h3>
+                           )}
+                           {item.isStarred && <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />}
+                           {item.isShared && <Share2 className="w-3 h-3 text-blue-500" />}
+                         </div>
                         <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{item.description}</p>
                         
                         <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -429,13 +480,21 @@ export const HistoryArea = () => {
                       "flex items-center gap-1 mt-3 opacity-0 transition-opacity duration-200",
                       hoveredItem === item.id && "opacity-100"
                     )}>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
-                              <Edit className="w-3 h-3" />
-                            </Button>
-                          </TooltipTrigger>
+                       <TooltipProvider>
+                         <Tooltip>
+                           <TooltipTrigger asChild>
+                             <Button 
+                               variant="ghost" 
+                               size="sm" 
+                               className="h-7 w-7 p-0"
+                               onClick={(e) => {
+                                 e.stopPropagation();
+                                 handleEditConversation(item.id, item.name);
+                               }}
+                             >
+                               <Edit className="w-3 h-3" />
+                             </Button>
+                           </TooltipTrigger>
                           <TooltipContent>
                             <p>Edit</p>
                           </TooltipContent>
