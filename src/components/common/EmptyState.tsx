@@ -24,7 +24,7 @@ export const EmptyState = ({
 }: EmptyStateProps) => {
   return (
     <div className={cn("flex items-center justify-center h-full p-8", className)}>
-      <div className="text-center max-w-2xl">
+      <div className="text-center w-full max-w-2xl">
         {/* Icon */}
         <div className="p-4 bg-accent/50 rounded-lg inline-block mb-6">
           {icon}
@@ -53,9 +53,8 @@ export const EmptyState = ({
           </div>
         )}
         
-        {/* Action */}
         {action && (
-          <div className="flex justify-center">
+          <div className="w-full flex justify-center">
             {action}
           </div>
         )}
