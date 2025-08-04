@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { BaseLayout } from "@/components/common/BaseLayout";
 import { EmptyState } from "@/components/common/EmptyState";
+import { VoiceChat } from "./VoiceChat";
 import { Mic, Video, Monitor, Play, HelpCircle, Code, Share, RotateCcw, MoreHorizontal, Radio, Sparkles, Settings, Zap, Camera, Volume2, ScreenShare, ArrowRight, Clock, Users } from "lucide-react";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -17,6 +18,19 @@ export const StreamArea = () => {
   const [isVideoActive, setIsVideoActive] = useState(false);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
+  const [showVoiceChat, setShowVoiceChat] = useState(false);
+
+  if (showVoiceChat) {
+    return (
+      <div className="flex flex-col h-full">
+        <div className="p-4 border-b border-border flex items-center gap-3">
+          <Button variant="ghost" onClick={() => setShowVoiceChat(false)}>← Back</Button>
+          <h2 className="font-semibold">Voice Chat</h2>
+        </div>
+        <VoiceChat />
+      </div>
+    );
+  }
 
   const getProviderIcon = () => {
     return modelConfig.provider === "openai" ? <Sparkles className="w-4 h-4" /> : <Radio className="w-4 h-4" />;
@@ -167,7 +181,7 @@ export const StreamArea = () => {
                   "p-6 cursor-pointer transition-all duration-200 border-2 hover:border-brand-blue/20 hover:shadow-lg",
                   isRecording && "border-brand-blue/40 bg-brand-blue/5"
                 )}
-                onClick={handleStartStream}
+                onClick={() => setShowVoiceChat(true)}
                 onMouseEnter={() => setHoveredButton("voice")}
                 onMouseLeave={() => setHoveredButton(null)}
               >
