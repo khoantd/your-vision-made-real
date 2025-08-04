@@ -99,7 +99,7 @@ export const VoiceChat = () => {
           }
         ]}
         action={
-          <div className="space-y-6 w-full max-w-4xl">
+          <div className="space-y-6 w-full max-w-5xl mx-auto">
             {/* Connection Status Card */}
             <Card className="p-6 bg-gradient-to-br from-accent/20 to-accent/10 border border-border shadow-lg">{/* ... keep existing code */}
               <div className="flex items-center justify-between mb-4">
@@ -292,7 +292,7 @@ export const VoiceChat = () => {
             </Card>
 
             {/* Enhanced Control Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto">
               {/* Connect/Disconnect Button */}
               <Card 
                 className={cn(
