@@ -10,13 +10,21 @@ import { Badge } from "@/components/ui/badge";
 import { X, ChevronDown, ChevronRight, Wrench, Plus, Trash2, Copy } from "lucide-react";
 import { useState } from "react";
 import { LLM_PROVIDERS, MODELS_BY_PROVIDER } from "@/constants/models";
+import { useAIStudio } from "@/contexts/AIStudioContext";
+import { APIKeyInput } from "./APIKeyInput";
+import { Separator } from "@/components/ui/separator";
+import { DynamicModelSelector } from "./DynamicModelSelector";
 
 export const SettingsPanel = () => {
+  const { 
+    modelConfig, 
+    updateModelConfig, 
+    openAIConfig, 
+    updateOpenAIConfig 
+  } = useAIStudio();
+  
   const [isOpen, setIsOpen] = useState(true);
-  const [selectedProvider, setSelectedProvider] = useState<"google" | "openai">("google");
-  const [selectedModel, setSelectedModel] = useState("gemini-2.0-flash-exp");
   const [toolsOpen, setToolsOpen] = useState(true);
-  const [temperature, setTemperature] = useState([1]);
   const [thinkingMode, setThinkingMode] = useState(false);
   const [thinkingBudget, setThinkingBudget] = useState(false);
   const [structuredOutput, setStructuredOutput] = useState(false);
@@ -25,16 +33,6 @@ export const SettingsPanel = () => {
   const [googleSearch, setGoogleSearch] = useState(false);
   const [urlContext, setUrlContext] = useState(false);
   const [advancedOpen, setAdvancedOpen] = useState(false);
-  const [topP, setTopP] = useState([0.95]);
-  const [topK, setTopK] = useState([40]);
-  const [maxTokens, setMaxTokens] = useState([8192]);
-  const [frequencyPenalty, setFrequencyPenalty] = useState([0]);
-  const [presencePenalty, setPresencePenalty] = useState([0]);
-  const [stopSequences, setStopSequences] = useState("");
-  const [systemPrompt, setSystemPrompt] = useState("");
-  const [apiTimeout, setApiTimeout] = useState([30]);
-  const [streaming, setStreaming] = useState(true);
-  const [logProbabilities, setLogProbabilities] = useState(false);
   const [structuredOutputOpen, setStructuredOutputOpen] = useState(false);
   const [outputFormat, setOutputFormat] = useState("json");
   const [jsonSchema, setJsonSchema] = useState(`{
@@ -168,18 +166,29 @@ export const SettingsPanel = () => {
 
       {/* Settings Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
+        {/* API Configuration */}
+        <div>
+          <h3 className="text-sm font-medium text-foreground mb-3">API Configuration</h3>
+          <div className="space-y-4">
+            <APIKeyInput provider="openai" />
+            <APIKeyInput provider="google" />
+          </div>
+        </div>
+
+        <Separator />
+
         {/* Provider Selection */}
         <div>
           <label className="text-sm font-medium text-foreground mb-2 block">
             LLM Provider
           </label>
           <Select 
-            value={selectedProvider} 
+            value={modelConfig.provider} 
             onValueChange={(value: "google" | "openai") => {
-              setSelectedProvider(value);
+              updateModelConfig({ provider: value });
               // Auto-select first model of the new provider
               const firstModel = MODELS_BY_PROVIDER[value][0].value;
-              setSelectedModel(firstModel);
+              updateModelConfig({ name: firstModel });
             }}
           >
             <SelectTrigger>
@@ -200,33 +209,11 @@ export const SettingsPanel = () => {
           <label className="text-sm font-medium text-foreground mb-2 block">
             Model
           </label>
-          <Select value={selectedModel} onValueChange={setSelectedModel}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {MODELS_BY_PROVIDER[selectedProvider].map((model) => (
-                <SelectItem key={model.value} value={model.value}>
-                  {model.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* API Key */}
-        <div>
-          <label className="text-sm font-medium text-foreground mb-2 block">
-            API Key
-          </label>
-          <Input
-            type="password"
-            placeholder={`Enter ${selectedProvider === 'google' ? 'Google' : 'OpenAI'} API key`}
-            className="w-full"
+          <DynamicModelSelector
+            provider={modelConfig.provider}
+            selectedModel={modelConfig.name}
+            onModelChange={(modelId) => updateModelConfig({ name: modelId })}
           />
-          <p className="text-xs text-muted-foreground mt-1">
-            Required for {selectedProvider === 'google' ? 'Google' : 'OpenAI'} models
-          </p>
         </div>
 
         {/* Token Count */}
@@ -244,8 +231,8 @@ export const SettingsPanel = () => {
           </label>
           <div className="px-2">
             <Slider
-              value={temperature}
-              onValueChange={setTemperature}
+              value={[modelConfig.temperature]}
+              onValueChange={(value) => updateModelConfig({ temperature: value[0] })}
               max={2}
               min={0}
               step={0.1}
@@ -253,7 +240,7 @@ export const SettingsPanel = () => {
             />
             <div className="flex justify-between text-xs text-muted-foreground mt-1">
               <span>0</span>
-              <span className="font-medium">{temperature[0]}</span>
+              <span className="font-medium">{modelConfig.temperature}</span>
               <span>2</span>
             </div>
           </div>
@@ -957,8 +944,8 @@ export const SettingsPanel = () => {
               </label>
               <div className="px-2">
                 <Slider
-                  value={topP}
-                  onValueChange={setTopP}
+                  value={[modelConfig.topP]}
+                  onValueChange={(value) => updateModelConfig({ topP: value[0] })}
                   max={1}
                   min={0}
                   step={0.01}
@@ -966,7 +953,7 @@ export const SettingsPanel = () => {
                 />
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
                   <span>0</span>
-                  <span className="font-medium">{topP[0]}</span>
+                  <span className="font-medium">{modelConfig.topP}</span>
                   <span>1</span>
                 </div>
               </div>
@@ -979,8 +966,8 @@ export const SettingsPanel = () => {
               </label>
               <div className="px-2">
                 <Slider
-                  value={topK}
-                  onValueChange={setTopK}
+                  value={[modelConfig.topK]}
+                  onValueChange={(value) => updateModelConfig({ topK: value[0] })}
                   max={100}
                   min={1}
                   step={1}
@@ -988,7 +975,7 @@ export const SettingsPanel = () => {
                 />
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
                   <span>1</span>
-                  <span className="font-medium">{topK[0]}</span>
+                  <span className="font-medium">{modelConfig.topK}</span>
                   <span>100</span>
                 </div>
               </div>
@@ -1001,8 +988,8 @@ export const SettingsPanel = () => {
               </label>
               <div className="px-2">
                 <Slider
-                  value={maxTokens}
-                  onValueChange={setMaxTokens}
+                  value={[modelConfig.maxTokens]}
+                  onValueChange={(value) => updateModelConfig({ maxTokens: value[0] })}
                   max={32768}
                   min={1}
                   step={1}
@@ -1010,7 +997,7 @@ export const SettingsPanel = () => {
                 />
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
                   <span>1</span>
-                  <span className="font-medium">{maxTokens[0]}</span>
+                  <span className="font-medium">{modelConfig.maxTokens}</span>
                   <span>32K</span>
                 </div>
               </div>
@@ -1023,8 +1010,8 @@ export const SettingsPanel = () => {
               </label>
               <div className="px-2">
                 <Slider
-                  value={frequencyPenalty}
-                  onValueChange={setFrequencyPenalty}
+                  value={[modelConfig.frequencyPenalty || 0]}
+                  onValueChange={(value) => updateModelConfig({ frequencyPenalty: value[0] })}
                   max={2}
                   min={-2}
                   step={0.1}
@@ -1032,7 +1019,7 @@ export const SettingsPanel = () => {
                 />
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
                   <span>-2</span>
-                  <span className="font-medium">{frequencyPenalty[0]}</span>
+                  <span className="font-medium">{modelConfig.frequencyPenalty || 0}</span>
                   <span>2</span>
                 </div>
               </div>
@@ -1045,8 +1032,8 @@ export const SettingsPanel = () => {
               </label>
               <div className="px-2">
                 <Slider
-                  value={presencePenalty}
-                  onValueChange={setPresencePenalty}
+                  value={[modelConfig.presencePenalty || 0]}
+                  onValueChange={(value) => updateModelConfig({ presencePenalty: value[0] })}
                   max={2}
                   min={-2}
                   step={0.1}
@@ -1054,7 +1041,7 @@ export const SettingsPanel = () => {
                 />
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
                   <span>-2</span>
-                  <span className="font-medium">{presencePenalty[0]}</span>
+                  <span className="font-medium">{modelConfig.presencePenalty || 0}</span>
                   <span>2</span>
                 </div>
               </div>
@@ -1067,8 +1054,8 @@ export const SettingsPanel = () => {
               </label>
               <Input
                 placeholder="Enter stop sequences (comma separated)"
-                value={stopSequences}
-                onChange={(e) => setStopSequences(e.target.value)}
+                value={modelConfig.stopSequences || ""}
+                onChange={(e) => updateModelConfig({ stopSequences: e.target.value })}
                 className="text-sm"
               />
             </div>
@@ -1080,8 +1067,8 @@ export const SettingsPanel = () => {
               </label>
               <Textarea
                 placeholder="Enter custom system prompt..."
-                value={systemPrompt}
-                onChange={(e) => setSystemPrompt(e.target.value)}
+                value={modelConfig.systemPrompt || ""}
+                onChange={(e) => updateModelConfig({ systemPrompt: e.target.value })}
                 className="text-sm min-h-20"
               />
             </div>
@@ -1093,8 +1080,8 @@ export const SettingsPanel = () => {
               </label>
               <div className="px-2">
                 <Slider
-                  value={apiTimeout}
-                  onValueChange={setApiTimeout}
+                  value={[modelConfig.apiTimeout || 30]}
+                  onValueChange={(value) => updateModelConfig({ apiTimeout: value[0] })}
                   max={300}
                   min={5}
                   step={5}
@@ -1102,7 +1089,7 @@ export const SettingsPanel = () => {
                 />
                 <div className="flex justify-between text-xs text-muted-foreground mt-1">
                   <span>5s</span>
-                  <span className="font-medium">{apiTimeout[0]}s</span>
+                  <span className="font-medium">{modelConfig.apiTimeout || 30}s</span>
                   <span>5m</span>
                 </div>
               </div>
@@ -1112,11 +1099,17 @@ export const SettingsPanel = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-foreground">Streaming</span>
-                <Switch checked={streaming} onCheckedChange={setStreaming} />
+                <Switch 
+                  checked={modelConfig.streaming !== false} 
+                  onCheckedChange={(checked) => updateModelConfig({ streaming: checked })} 
+                />
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-foreground">Log probabilities</span>
-                <Switch checked={logProbabilities} onCheckedChange={setLogProbabilities} />
+                <Switch 
+                  checked={modelConfig.logProbabilities || false} 
+                  onCheckedChange={(checked) => updateModelConfig({ logProbabilities: checked })} 
+                />
               </div>
             </div>
           </div>

@@ -8,7 +8,7 @@ import { HistoryArea } from "./HistoryArea";
 import { SettingsPanel } from "./SettingsPanel";
 import { StreamSettingsPanel } from "./StreamSettingsPanel";
 import { GenerateMediaSettingsPanel } from "./GenerateMediaSettingsPanel";
-import { useAIStudio } from "@/hooks/useAIStudio";
+import { useAIStudio } from "@/contexts/AIStudioContext";
 import { useState } from "react";
 
 export const AIStudioLayout = () => {

@@ -21,6 +21,13 @@ export interface ModelConfig {
   maxTokens: number;
   topP: number;
   topK: number;
+  frequencyPenalty?: number;
+  presencePenalty?: number;
+  stopSequences?: string;
+  systemPrompt?: string;
+  apiTimeout?: number;
+  streaming?: boolean;
+  logProbabilities?: boolean;
   apiKey?: string;
 }
 
