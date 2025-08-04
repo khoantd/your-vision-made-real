@@ -4,8 +4,10 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { X, ChevronDown, ChevronRight, Wrench } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { X, ChevronDown, ChevronRight, Wrench, Plus, Trash2, Copy } from "lucide-react";
 import { useState } from "react";
 import { CHAT_MODELS } from "@/constants/models";
 
@@ -30,6 +32,77 @@ export const SettingsPanel = () => {
   const [apiTimeout, setApiTimeout] = useState([30]);
   const [streaming, setStreaming] = useState(true);
   const [logProbabilities, setLogProbabilities] = useState(false);
+  const [structuredOutputOpen, setStructuredOutputOpen] = useState(false);
+  const [outputFormat, setOutputFormat] = useState("json");
+  const [jsonSchema, setJsonSchema] = useState(`{
+  "type": "object",
+  "properties": {
+    "response": {
+      "type": "string",
+      "description": "The main response"
+    }
+  },
+  "required": ["response"]
+}`);
+  const [schemaTemplates] = useState([
+    {
+      name: "Simple Response",
+      schema: `{
+  "type": "object",
+  "properties": {
+    "response": {
+      "type": "string",
+      "description": "The main response"
+    }
+  },
+  "required": ["response"]
+}`
+    },
+    {
+      name: "Classification",
+      schema: `{
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "enum": ["positive", "negative", "neutral"]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "reasoning": {
+      "type": "string"
+    }
+  },
+  "required": ["category", "confidence"]
+}`
+    },
+    {
+      name: "Data Extraction",
+      schema: `{
+  "type": "object",
+  "properties": {
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "type": {"type": "string"},
+          "value": {"type": "string"}
+        }
+      }
+    },
+    "summary": {
+      "type": "string"
+    }
+  },
+  "required": ["entities"]
+}`
+    }
+  ]);
 
   if (!isOpen) {
     return (
@@ -150,11 +223,206 @@ export const SettingsPanel = () => {
           </div>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <div>
+              <div className="flex items-center gap-2">
                 <span className="text-sm text-foreground">Structured output</span>
-                <Button variant="ghost" size="sm" className="ml-2 text-xs text-muted-foreground">
-                  Edit
-                </Button>
+                <Dialog open={structuredOutputOpen} onOpenChange={setStructuredOutputOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-foreground">
+                      Edit
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>Configure Structured Output</DialogTitle>
+                      <DialogDescription>
+                        Define the structure and format for AI responses using JSON Schema.
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="space-y-4">
+                      {/* Output Format Selection */}
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-2 block">
+                          Output Format
+                        </label>
+                        <Select value={outputFormat} onValueChange={setOutputFormat}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="json">JSON</SelectItem>
+                            <SelectItem value="yaml">YAML</SelectItem>
+                            <SelectItem value="xml">XML</SelectItem>
+                            <SelectItem value="csv">CSV</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Schema Templates */}
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-2 block">
+                          Quick Templates
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {schemaTemplates.map((template, index) => (
+                            <Button
+                              key={index}
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setJsonSchema(template.schema)}
+                              className="text-xs"
+                            >
+                              {template.name}
+                            </Button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* JSON Schema Editor */}
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <label className="text-sm font-medium text-foreground">
+                            JSON Schema
+                          </label>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                try {
+                                  const formatted = JSON.stringify(JSON.parse(jsonSchema), null, 2);
+                                  setJsonSchema(formatted);
+                                } catch (e) {
+                                  // Handle invalid JSON
+                                }
+                              }}
+                              className="text-xs"
+                            >
+                              Format
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => navigator.clipboard.writeText(jsonSchema)}
+                              className="text-xs"
+                            >
+                              <Copy className="w-3 h-3 mr-1" />
+                              Copy
+                            </Button>
+                          </div>
+                        </div>
+                        <Textarea
+                          value={jsonSchema}
+                          onChange={(e) => setJsonSchema(e.target.value)}
+                          className="font-mono text-sm min-h-48"
+                          placeholder="Enter your JSON schema here..."
+                        />
+                      </div>
+
+                      {/* Schema Validation */}
+                      <div>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => {
+                            try {
+                              JSON.parse(jsonSchema);
+                              alert("Valid JSON Schema!");
+                            } catch (e) {
+                              alert("Invalid JSON Schema: " + e.message);
+                            }
+                          }}
+                          className="w-full"
+                        >
+                          Validate Schema
+                        </Button>
+                      </div>
+
+                      {/* Common Properties Helper */}
+                      <div>
+                        <label className="text-sm font-medium text-foreground mb-2 block">
+                          Common Properties
+                        </label>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const current = JSON.parse(jsonSchema);
+                              current.properties = current.properties || {};
+                              current.properties.timestamp = {
+                                type: "string",
+                                format: "date-time"
+                              };
+                              setJsonSchema(JSON.stringify(current, null, 2));
+                            }}
+                            className="text-xs"
+                          >
+                            + Timestamp
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const current = JSON.parse(jsonSchema);
+                              current.properties = current.properties || {};
+                              current.properties.confidence = {
+                                type: "number",
+                                minimum: 0,
+                                maximum: 1
+                              };
+                              setJsonSchema(JSON.stringify(current, null, 2));
+                            }}
+                            className="text-xs"
+                          >
+                            + Confidence
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const current = JSON.parse(jsonSchema);
+                              current.properties = current.properties || {};
+                              current.properties.tags = {
+                                type: "array",
+                                items: { type: "string" }
+                              };
+                              setJsonSchema(JSON.stringify(current, null, 2));
+                            }}
+                            className="text-xs"
+                          >
+                            + Tags Array
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const current = JSON.parse(jsonSchema);
+                              current.properties = current.properties || {};
+                              current.properties.metadata = {
+                                type: "object",
+                                additionalProperties: true
+                              };
+                              setJsonSchema(JSON.stringify(current, null, 2));
+                            }}
+                            className="text-xs"
+                          >
+                            + Metadata
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setStructuredOutputOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button onClick={() => setStructuredOutputOpen(false)}>
+                        Save Schema
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
               <Switch checked={structuredOutput} onCheckedChange={setStructuredOutput} />
             </div>
