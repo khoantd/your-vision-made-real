@@ -8,6 +8,7 @@ import { BuildArea } from "./BuildArea";
 import { HistoryArea } from "./HistoryArea";
 import { SettingsPanel } from "./SettingsPanel";
 import { StreamSettingsPanel } from "./StreamSettingsPanel";
+import { TalkSettingsPanel } from "./TalkSettingsPanel";
 import { GenerateMediaSettingsPanel } from "./GenerateMediaSettingsPanel";
 import { useAIStudio } from "@/contexts/AIStudioContext";
 import { useState } from "react";
@@ -37,6 +38,8 @@ export const AIStudioLayout = () => {
     switch (activeView) {
       case "stream":
         return <StreamSettingsPanel />;
+      case "talk":
+        return <TalkSettingsPanel />;
       case "generate-media":
         return <GenerateMediaSettingsPanel />;
       default:

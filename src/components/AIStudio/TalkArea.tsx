@@ -279,163 +279,176 @@ export const TalkArea = ({ className }: TalkAreaProps) => {
   }
 
   return (
-    <div className={cn("flex flex-col h-full", className)}>
+    <div className={cn("flex-1 bg-chat-bg flex flex-col", className)}>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-br from-brand-blue to-purple-600 rounded-lg">
-            <Mic className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold">Voice Chat</h2>
+      <div className="p-6 border-b border-border">
+        <h1 className="text-xl font-medium text-foreground">Voice Chat</h1>
+      </div>
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Status Bar */}
+        <div className="p-4 bg-accent/30 border-b border-border">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Badge 
+                  variant={connectionStatus === 'connected' ? 'default' : 'secondary'}
+                  className={cn(
+                    connectionStatus === 'connected' && "bg-green-500 hover:bg-green-600",
+                    connectionStatus === 'connecting' && "bg-yellow-500 hover:bg-yellow-600"
+                  )}
+                >
+                  {connectionStatus === 'connected' && "Connected"}
+                  {connectionStatus === 'connecting' && "Connecting..."}
+                  {connectionStatus === 'disconnected' && "Disconnected"}
+                </Badge>
+                {isRecording && (
+                  <Badge variant="outline" className="text-red-500 border-red-500">
+                    <Mic className="w-3 h-3 mr-1" />
+                    Recording
+                  </Badge>
+                )}
+                {isSpeaking && (
+                  <Badge variant="outline" className="text-blue-500 border-blue-500">
+                    <Volume2 className="w-3 h-3 mr-1" />
+                    Speaking
+                  </Badge>
+                )}
+              </div>
+            </div>
+
             <div className="flex items-center gap-2">
-              <Badge 
-                variant={connectionStatus === 'connected' ? 'default' : 'secondary'}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleAudio}
                 className={cn(
-                  connectionStatus === 'connected' && "bg-green-500 hover:bg-green-600",
-                  connectionStatus === 'connecting' && "bg-yellow-500 hover:bg-yellow-600"
+                  "transition-colors",
+                  !isAudioEnabled && "text-muted-foreground"
                 )}
               >
-                {connectionStatus === 'connected' && "Connected"}
-                {connectionStatus === 'connecting' && "Connecting..."}
-                {connectionStatus === 'disconnected' && "Disconnected"}
-              </Badge>
-              {isRecording && (
-                <Badge variant="outline" className="text-red-500 border-red-500">
-                  <Mic className="w-3 h-3 mr-1" />
-                  Recording
-                </Badge>
-              )}
-              {isSpeaking && (
-                <Badge variant="outline" className="text-blue-500 border-blue-500">
-                  <Volume2 className="w-3 h-3 mr-1" />
-                  Speaking
-                </Badge>
-              )}
+                {isAudioEnabled ? (
+                  <Volume2 className="w-4 h-4" />
+                ) : (
+                  <VolumeX className="w-4 h-4" />
+                )}
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearChat}
+                disabled={messages.length === 0}
+              >
+                Clear
+              </Button>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={toggleAudio}
-            className={cn(
-              "transition-colors",
-              !isAudioEnabled && "text-muted-foreground"
-            )}
-          >
-            {isAudioEnabled ? (
-              <Volume2 className="w-4 h-4" />
-            ) : (
-              <VolumeX className="w-4 h-4" />
-            )}
-          </Button>
-          
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={clearChat}
-            disabled={messages.length === 0}
-          >
-            Clear
-          </Button>
-        </div>
-      </div>
-
-      {/* Messages Area */}
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
-          {messages.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="p-4 bg-accent/50 rounded-lg inline-block mb-4">
-                <MessageSquare className="w-8 h-8 text-muted-foreground" />
-              </div>
-              <h3 className="text-lg font-medium mb-2">Start a Voice Conversation</h3>
-              <p className="text-muted-foreground mb-6">
-                Connect to begin talking with the AI. Your conversation will appear here.
-              </p>
-              <div className="space-y-3 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2 justify-center">
-                  <Zap className="w-4 h-4 text-brand-blue" />
-                  <span>Natural voice conversations with real-time responses</span>
-                </div>
-                <div className="flex items-center gap-2 justify-center">
-                  <Mic className="w-4 h-4 text-brand-blue" />
-                  <span>Automatic speech detection - no need to press buttons</span>
-                </div>
-              </div>
-            </div>
-          ) : (
-            messages.map((message, index) => (
-              <Card key={index} className={cn(
-                "p-4",
-                message.type === 'user' ? "ml-12 bg-brand-blue/5 border-brand-blue/20" : "mr-12"
-              )}>
-                <div className="flex items-start gap-3">
-                  <div className={cn(
-                    "p-2 rounded-lg flex-shrink-0",
-                    message.type === 'user' 
-                      ? "bg-brand-blue text-white" 
-                      : "bg-accent text-foreground"
-                  )}>
-                    {message.type === 'user' ? (
-                      <Mic className="w-4 h-4" />
-                    ) : (
-                      <Volume2 className="w-4 h-4" />
-                    )}
+        {/* Messages Area */}
+        <div className="flex-1 overflow-hidden">
+          <ScrollArea className="h-full p-6">
+            <div className="max-w-4xl mx-auto space-y-4">
+              {messages.length === 0 ? (
+                <div className="text-center py-20">
+                  <div className="p-4 bg-accent/50 rounded-lg inline-block mb-4">
+                    <Mic className="w-12 h-12 text-muted-foreground" />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-medium">
-                        {message.type === 'user' ? 'You' : 'Assistant'}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {message.timestamp.toLocaleTimeString()}
-                      </span>
+                  <h3 className="text-2xl font-medium mb-3">Start a Voice Conversation</h3>
+                  <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
+                    Connect to begin talking with the AI using natural voice. Your conversation will appear here in real-time.
+                  </p>
+                  <div className="grid md:grid-cols-2 gap-4 max-w-md mx-auto">
+                    <div className="flex items-center gap-3 p-4 bg-card rounded-lg border">
+                      <Zap className="w-5 h-5 text-brand-blue" />
+                      <div className="text-left">
+                        <p className="font-medium text-sm">Real-time AI</p>
+                        <p className="text-xs text-muted-foreground">Natural conversations</p>
+                      </div>
                     </div>
-                    <p className="text-sm leading-relaxed">{message.content}</p>
+                    <div className="flex items-center gap-3 p-4 bg-card rounded-lg border">
+                      <Mic className="w-5 h-5 text-brand-blue" />
+                      <div className="text-left">
+                        <p className="font-medium text-sm">Voice Detection</p>
+                        <p className="text-xs text-muted-foreground">Automatic speech</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </Card>
-            ))
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-      </ScrollArea>
-
-      {/* Connection Controls */}
-      <div className="p-4 border-t border-border">
-        <div className="flex justify-center">
-          {!isConnected ? (
-            <Button 
-              onClick={connectToChat}
-              disabled={connectionStatus === 'connecting'}
-              className="bg-brand-blue hover:bg-brand-blue/90 text-white px-8"
-            >
-              {connectionStatus === 'connecting' ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Connecting...
-                </>
               ) : (
-                <>
-                  <Mic className="w-4 h-4 mr-2" />
-                  Start Voice Chat
-                </>
+                messages.map((message, index) => (
+                  <Card key={index} className={cn(
+                    "p-4 max-w-3xl",
+                    message.type === 'user' ? "ml-auto bg-brand-blue/5 border-brand-blue/20" : "mr-auto"
+                  )}>
+                    <div className="flex items-start gap-3">
+                      <div className={cn(
+                        "p-2 rounded-lg flex-shrink-0",
+                        message.type === 'user' 
+                          ? "bg-brand-blue text-white" 
+                          : "bg-accent text-foreground"
+                      )}>
+                        {message.type === 'user' ? (
+                          <Mic className="w-4 h-4" />
+                        ) : (
+                          <Volume2 className="w-4 h-4" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-medium">
+                            {message.type === 'user' ? 'You' : 'Assistant'}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {message.timestamp.toLocaleTimeString()}
+                          </span>
+                        </div>
+                        <p className="text-sm leading-relaxed">{message.content}</p>
+                      </div>
+                    </div>
+                  </Card>
+                ))
               )}
-            </Button>
-          ) : (
-            <Button 
-              onClick={disconnectFromChat}
-              variant="outline"
-              className="px-8"
-            >
-              <MicOff className="w-4 h-4 mr-2" />
-              End Chat
-            </Button>
-          )}
+              <div ref={messagesEndRef} />
+            </div>
+          </ScrollArea>
+        </div>
+
+        {/* Connection Controls */}
+        <div className="p-6 border-t border-border bg-background">
+          <div className="max-w-4xl mx-auto flex justify-center">
+            {!isConnected ? (
+              <Button 
+                onClick={connectToChat}
+                disabled={connectionStatus === 'connecting'}
+                className="bg-brand-blue hover:bg-brand-blue/90 text-white px-8 py-3 text-base"
+                size="lg"
+              >
+                {connectionStatus === 'connecting' ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Connecting...
+                  </>
+                ) : (
+                  <>
+                    <Mic className="w-5 h-5 mr-2" />
+                    Start Voice Chat
+                  </>
+                )}
+              </Button>
+            ) : (
+              <Button 
+                onClick={disconnectFromChat}
+                variant="outline"
+                className="px-8 py-3 text-base"
+                size="lg"
+              >
+                <MicOff className="w-5 h-5 mr-2" />
+                End Chat
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>
