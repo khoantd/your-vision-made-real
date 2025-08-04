@@ -473,21 +473,24 @@ export const ChatArea = () => {
             </div>
           </div>
 
-          {/* Enhanced Chat messages */}
-          <ScrollArea ref={scrollAreaRef} className="flex-1 p-4">
-            <div className="space-y-6 max-w-4xl mx-auto">
+          {/* Enhanced Chat messages with improved layout */}
+          <ScrollArea ref={scrollAreaRef} className="flex-1 px-4 py-6">
+            <div className="space-y-8 max-w-5xl mx-auto">
               {chatState.messages.map((message) => (
                 <ChatMessage key={message.id} message={message} />
               ))}
               {chatState.isLoading && (
-                <div className="flex items-center gap-3 p-4 bg-accent/20 rounded-lg border border-border">
-                  <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
-                  <div className="flex items-center gap-2">
-                    <span className="text-muted-foreground font-medium">Assistant is thinking</span>
-                    <div className="flex gap-1">
-                      <div className="w-1 h-1 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="w-1 h-1 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                      <div className="w-1 h-1 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                <div className="flex items-center gap-4 p-6 bg-gradient-to-r from-accent/30 to-accent/20 rounded-2xl border border-border/50 shadow-sm animate-fade-in">
+                  <div className="relative">
+                    <div className="w-8 h-8 border-3 border-gradient-primary border-t-transparent rounded-full animate-spin" />
+                    <div className="absolute inset-0 w-8 h-8 border-3 border-gradient-primary/20 rounded-full" />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-foreground font-semibold text-lg">AI is thinking</span>
+                    <div className="flex gap-1.5">
+                      <div className="w-2 h-2 bg-gradient-to-br from-brand-blue to-purple-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="w-2 h-2 bg-gradient-to-br from-brand-blue to-purple-600 rounded-full animate-bounce" style={{ animationDelay: '200ms' }}></div>
+                      <div className="w-2 h-2 bg-gradient-to-br from-brand-blue to-purple-600 rounded-full animate-bounce" style={{ animationDelay: '400ms' }}></div>
                     </div>
                   </div>
                 </div>
@@ -505,51 +508,66 @@ export const ChatArea = () => {
             </Alert>
           )}
 
-          {/* Enhanced Bottom input */}
-          <div className="p-4 border-t border-border bg-background/80 backdrop-blur-sm">
-            <div className="max-w-4xl mx-auto">
-              <div className="flex items-end gap-3 p-4 border border-border rounded-xl bg-background/50 backdrop-blur-sm shadow-sm">
-                <div className="flex-1">
-                  <Textarea
-                    ref={textareaRef}
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
-                    className="flex-1 border-0 bg-transparent resize-none min-h-[44px] max-h-[200px] focus-visible:ring-0 text-sm focus-ring"
-                    rows={1}
-                    disabled={isSubmitting}
-                  />
-                  {isTyping && (
-                    <div className="flex items-center gap-2 mt-2">
-                      <User className="w-3 h-3 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">Typing...</span>
-                    </div>
-                  )}
+          {/* Enhanced Bottom input with modern design */}
+          <div className="p-6 border-t border-border bg-gradient-to-t from-background/95 to-background/80 backdrop-blur-md">
+            <div className="max-w-5xl mx-auto">
+              <div className="relative">
+                <div className="flex items-end gap-4 p-5 border border-border/50 rounded-2xl bg-gradient-to-br from-background/90 to-background/70 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
+                  <div className="flex-1">
+                    <Textarea
+                      ref={textareaRef}
+                      value={prompt}
+                      onChange={(e) => setPrompt(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      placeholder="Ask me anything... I'm here to help! ✨ (Enter to send, Shift+Enter for new line)"
+                      className="flex-1 border-0 bg-transparent resize-none min-h-[52px] max-h-[200px] focus-visible:ring-0 text-base leading-relaxed focus-ring placeholder:text-muted-foreground/70"
+                      rows={1}
+                      disabled={isSubmitting}
+                    />
+                    {isTyping && (
+                      <div className="flex items-center gap-3 mt-3 p-2 bg-accent/20 rounded-lg animate-fade-in">
+                        <div className="flex items-center gap-2">
+                          <User className="w-4 h-4 text-brand-blue" />
+                          <span className="text-sm text-foreground font-medium">You're typing...</span>
+                        </div>
+                        <div className="flex gap-1">
+                          <div className="w-1.5 h-1.5 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                          <div className="w-1.5 h-1.5 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                          <div className="w-1.5 h-1.5 bg-brand-blue rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-brand-blue via-brand-blue to-purple-600 hover:from-brand-blue/90 hover:via-brand-blue/90 hover:to-purple-600/90 text-white px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover-lift disabled:opacity-50 disabled:cursor-not-allowed text-base font-semibold"
+                    onClick={handleSubmit}
+                    disabled={isSubmitting || !prompt.trim() || !currentApiKey}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-3" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-5 h-5 mr-3" />
+                        Send Message
+                      </>
+                    )}
+                  </Button>
                 </div>
                 
-                <Button 
-                  size="sm" 
-                  className="bg-gradient-to-r from-brand-blue to-purple-600 hover:from-brand-blue/90 hover:to-purple-600/90 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md hover-lift disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={handleSubmit}
-                  disabled={isSubmitting || !prompt.trim() || !currentApiKey}
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                      Sending
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 mr-2" />
-                      Send
-                    </>
-                  )}
-                </Button>
+                {/* Enhanced disclaimer */}
+                <div className="flex items-center justify-center gap-2 mt-4">
+                  <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent flex-1" />
+                  <p className="text-xs text-muted-foreground/80 px-4 bg-background/50 rounded-full border border-border/30">
+                    ⚡ Powered by {getProviderName()} • AI responses may contain errors
+                  </p>
+                  <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent flex-1" />
+                </div>
               </div>
-              <p className="text-xs text-muted-foreground mt-3 text-center">
-                {getProviderName()} AI models may make mistakes, so double-check outputs.
-              </p>
             </div>
           </div>
         </div>
