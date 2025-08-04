@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, MoreHorizontal, FileText, FolderOpen, History, Sparkles, Clock, Users, Star, Filter, Download, Share2, Trash2, Edit, Copy, ArrowRight, Calendar, MessageSquare, Video, Image, Music } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,10 @@ import { ContentCard } from "@/components/common/ContentCard";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { useAIStudio } from "@/contexts/AIStudioContext";
+import { conversationService, Conversation } from "@/services/conversationService";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
+import { formatDistanceToNow } from "date-fns";
 
 interface HistoryItem {
   id: string;
@@ -105,13 +109,53 @@ const mockHistoryData: HistoryItem[] = [
 ];
 
 export const HistoryArea = () => {
-  const { modelConfig } = useAIStudio();
+  const { modelConfig, setActiveView } = useAIStudio();
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [historyFilter, setHistoryFilter] = useState("my-history");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredHistory = mockHistoryData.filter(item =>
+  // Load conversations from Supabase
+  useEffect(() => {
+    const loadConversations = async () => {
+      if (!user) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const convs = await conversationService.getConversations();
+        setConversations(convs);
+      } catch (error) {
+        console.error('Failed to load conversations:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load conversation history",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadConversations();
+  }, [user, toast]);
+
+  // Convert conversations to history items
+  const historyItems: HistoryItem[] = conversations.map(conv => ({
+    id: conv.id,
+    name: conv.title,
+    description: conv.messages?.[0]?.content || 'No messages',
+    type: "chat" as const,
+    updated: formatDistanceToNow(new Date(conv.updated_at), { addSuffix: true }),
+    duration: `${conv.messages?.length || 0} messages`,
+  }));
+
+  const filteredHistory = historyItems.filter(item =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -166,6 +210,42 @@ export const HistoryArea = () => {
         return "File";
     }
   };
+
+  const handleLoadConversation = (conversationId: string) => {
+    // Switch to chat view and load the conversation
+    setActiveView('chat');
+    // The conversation loading will be handled by the ChatArea component
+    // We can pass the conversation ID via URL or context
+  };
+
+  const handleDeleteConversation = async (conversationId: string) => {
+    try {
+      await conversationService.deleteConversation(conversationId);
+      setConversations(prev => prev.filter(conv => conv.id !== conversationId));
+      toast({
+        title: "Success",
+        description: "Conversation deleted successfully",
+      });
+    } catch (error) {
+      console.error('Failed to delete conversation:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete conversation",
+        variant: "destructive",
+      });
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-blue mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading conversations...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col h-full bg-background">
@@ -302,6 +382,7 @@ export const HistoryArea = () => {
                     )}
                     onMouseEnter={() => setHoveredItem(item.id)}
                     onMouseLeave={() => setHoveredItem(null)}
+                    onClick={() => handleLoadConversation(item.id)}
                   >
                     <div className="flex items-start gap-3">
                       <div className={cn("p-2 rounded-lg", getTypeColor(item.type))}>
@@ -387,13 +468,21 @@ export const HistoryArea = () => {
                         </Tooltip>
                       </TooltipProvider>
 
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-red-500 hover:text-red-600">
-                              <Trash2 className="w-3 h-3" />
-                            </Button>
-                          </TooltipTrigger>
+                       <TooltipProvider>
+                         <Tooltip>
+                           <TooltipTrigger asChild>
+                             <Button 
+                               variant="ghost" 
+                               size="sm" 
+                               className="h-7 w-7 p-0 text-red-500 hover:text-red-600"
+                               onClick={(e) => {
+                                 e.stopPropagation();
+                                 handleDeleteConversation(item.id);
+                               }}
+                             >
+                               <Trash2 className="w-3 h-3" />
+                             </Button>
+                           </TooltipTrigger>
                           <TooltipContent>
                             <p>Delete</p>
                           </TooltipContent>
