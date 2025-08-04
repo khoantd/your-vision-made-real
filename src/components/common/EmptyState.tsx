@@ -23,8 +23,9 @@ export const EmptyState = ({
   className 
 }: EmptyStateProps) => {
   return (
-    <div className={cn("flex items-center justify-center h-full p-8", className)}>
-      <div className="text-center w-full max-w-2xl">
+    <div className={cn("flex flex-col items-center justify-center h-full p-8", className)}>
+      {/* Centered descriptive content */}
+      <div className="text-center max-w-2xl mb-8">
         {/* Icon */}
         <div className="p-4 bg-accent/50 rounded-lg inline-block mb-6">
           {icon}
@@ -38,7 +39,7 @@ export const EmptyState = ({
         
         {/* Features Grid */}
         {features && features.length > 0 && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {features.map((feature, index) => (
               <div key={index} className="flex items-center gap-3 p-4 bg-card rounded-lg border text-left">
                 <div className="text-brand-blue flex-shrink-0">
@@ -52,13 +53,14 @@ export const EmptyState = ({
             ))}
           </div>
         )}
-        
-        {action && (
-          <div className="w-full flex justify-center">
-            {action}
-          </div>
-        )}
       </div>
+      
+      {/* Full width action */}
+      {action && (
+        <div className="w-full">
+          {action}
+        </div>
+      )}
     </div>
   );
 };
