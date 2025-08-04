@@ -7,6 +7,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { PromptingGuide } from "./PromptingGuide";
 
 interface HeaderProps {
   sidebarVisible?: boolean;
@@ -17,6 +18,7 @@ export const Header = ({ sidebarVisible, setSidebarVisible }: HeaderProps) => {
   const { modelConfig } = useAIStudio();
   const { signOut, user } = useAuth();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [promptingGuideOpen, setPromptingGuideOpen] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -102,9 +104,14 @@ export const Header = ({ sidebarVisible, setSidebarVisible }: HeaderProps) => {
                     variant="ghost" 
                     size="sm" 
                     className="text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-                    asChild
+                    onClick={() => {
+                      if (link.label === "Prompting guide") {
+                        setPromptingGuideOpen(true);
+                      }
+                      // Handle other links here as needed
+                    }}
                   >
-                    <a href={link.href}>{link.label}</a>
+                    {link.label}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -189,6 +196,11 @@ export const Header = ({ sidebarVisible, setSidebarVisible }: HeaderProps) => {
           </TooltipProvider>
         </div>
       </div>
+      
+      <PromptingGuide 
+        open={promptingGuideOpen} 
+        onOpenChange={setPromptingGuideOpen} 
+      />
     </header>
   );
 };
