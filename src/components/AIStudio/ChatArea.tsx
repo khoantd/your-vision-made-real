@@ -127,29 +127,29 @@ export const ChatArea = () => {
         <div className="flex-1 p-4 max-w-5xl mx-auto w-full">
           {/* Header with title and tools */}
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <h1 className="text-lg font-medium text-foreground">Greeting and Assistance</h1>
-              <Button size="icon" variant="ghost" className="text-muted-foreground">
+              <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent">
                 <Edit className="w-4 h-4" />
               </Button>
             </div>
-            <div className="flex items-center gap-2">
-              <Button size="icon" variant="ghost" className="text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent">
                 <Share className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="ghost" className="text-muted-foreground">
+              <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent">
                 <Code className="w-4 h-4" />
               </Button>
               <Button 
                 size="icon" 
                 variant="ghost" 
-                className="text-muted-foreground hover:text-foreground"
+                className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent"
                 onClick={handleClearClick}
                 title="Clear chat"
               >
                 <X className="w-4 h-4" />
               </Button>
-              <Button size="icon" variant="ghost" className="text-muted-foreground">
+              <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-accent">
                 <MoreHorizontal className="w-4 h-4" />
               </Button>
             </div>
