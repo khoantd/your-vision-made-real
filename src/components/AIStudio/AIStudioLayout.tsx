@@ -2,13 +2,11 @@ import { Header } from "./Header";
 import { Sidebar } from "./Sidebar";
 import { ChatArea } from "./ChatArea";
 import { StreamArea } from "./StreamArea";
-import { TalkArea } from "./TalkArea";
 import { GenerateMediaArea } from "./GenerateMediaArea";
 import { BuildArea } from "./BuildArea";
 import { HistoryArea } from "./HistoryArea";
 import { SettingsPanel } from "./SettingsPanel";
 import { StreamSettingsPanel } from "./StreamSettingsPanel";
-import { TalkSettingsPanel } from "./TalkSettingsPanel";
 import { GenerateMediaSettingsPanel } from "./GenerateMediaSettingsPanel";
 import { useAIStudio } from "@/contexts/AIStudioContext";
 import { useState } from "react";
@@ -21,8 +19,6 @@ export const AIStudioLayout = () => {
     switch (activeView) {
       case "stream":
         return <StreamArea />;
-      case "talk":
-        return <TalkArea />;
       case "generate-media":
         return <GenerateMediaArea />;
       case "build":
@@ -38,8 +34,6 @@ export const AIStudioLayout = () => {
     switch (activeView) {
       case "stream":
         return <StreamSettingsPanel />;
-      case "talk":
-        return <TalkSettingsPanel />;
       case "generate-media":
         return <GenerateMediaSettingsPanel />;
       default:
