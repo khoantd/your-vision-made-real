@@ -921,18 +921,20 @@ export const SettingsPanel = () => {
         </div>
 
         {/* Advanced Settings */}
-        <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" className="w-full justify-between text-sm text-foreground">
-              Advanced settings
-              {advancedOpen ? (
-                <ChevronDown className="w-4 h-4" />
-              ) : (
-                <ChevronRight className="w-4 h-4" />
-              )}
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-4 mt-4">
+        <div>
+          <div 
+            className="flex items-center justify-between mb-3 cursor-pointer hover:bg-accent/50 rounded-md p-1 -m-1 transition-colors"
+            onClick={() => setAdvancedOpen(!advancedOpen)}
+          >
+            <h3 className="text-sm font-medium text-foreground">Advanced settings</h3>
+            <ChevronDown 
+              className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${
+                advancedOpen ? 'rotate-0' : '-rotate-90'
+              }`} 
+            />
+          </div>
+          {advancedOpen && (
+          <div className="space-y-4">
             {/* Top P */}
             <div>
               <label className="text-sm font-medium text-foreground mb-2 block">
@@ -1102,8 +1104,9 @@ export const SettingsPanel = () => {
                 <Switch checked={logProbabilities} onCheckedChange={setLogProbabilities} />
               </div>
             </div>
-          </CollapsibleContent>
-        </Collapsible>
+          </div>
+          )}
+        </div>
       </div>
     </div>
   );
