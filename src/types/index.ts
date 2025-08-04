@@ -10,8 +10,9 @@ export interface NavigationItem {
 export interface ChatMessage {
   id: string;
   content: string;
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
   timestamp: Date;
+  isLoading?: boolean;
 }
 
 export interface ModelConfig {
@@ -44,4 +45,20 @@ export interface MediaGenerationConfig {
   quality: string;
   steps: number;
   guidance: number;
+}
+
+export interface ChatState {
+  messages: ChatMessage[];
+  isLoading: boolean;
+  error: string | null;
+}
+
+export interface OpenAIConfig {
+  apiKey: string;
+  model: string;
+  temperature: number;
+  maxTokens: number;
+  topP: number;
+  frequencyPenalty: number;
+  presencePenalty: number;
 }
