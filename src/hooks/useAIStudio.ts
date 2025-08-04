@@ -11,6 +11,7 @@ export const useAIStudio = () => {
     maxTokens: 8192,
     topP: 0.95,
     topK: 40,
+    apiKey: "",
   });
 
   const [streamConfig, setStreamConfig] = useState<StreamConfig>({

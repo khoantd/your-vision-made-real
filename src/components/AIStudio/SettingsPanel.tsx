@@ -214,6 +214,21 @@ export const SettingsPanel = () => {
           </Select>
         </div>
 
+        {/* API Key */}
+        <div>
+          <label className="text-sm font-medium text-foreground mb-2 block">
+            API Key
+          </label>
+          <Input
+            type="password"
+            placeholder={`Enter ${selectedProvider === 'google' ? 'Google' : 'OpenAI'} API key`}
+            className="w-full"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Required for {selectedProvider === 'google' ? 'Google' : 'OpenAI'} models
+          </p>
+        </div>
+
         {/* Token Count */}
         <div>
           <label className="text-sm font-medium text-foreground mb-2 block">

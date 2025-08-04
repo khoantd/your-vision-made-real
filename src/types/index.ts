@@ -21,6 +21,7 @@ export interface ModelConfig {
   maxTokens: number;
   topP: number;
   topK: number;
+  apiKey?: string;
 }
 
 export interface StreamConfig {
