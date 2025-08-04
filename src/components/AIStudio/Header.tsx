@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { PromptingGuide } from "./PromptingGuide";
+import { FAQ } from "./FAQ";
 
 interface HeaderProps {
   sidebarVisible?: boolean;
@@ -19,6 +20,7 @@ export const Header = ({ sidebarVisible, setSidebarVisible }: HeaderProps) => {
   const { signOut, user } = useAuth();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [promptingGuideOpen, setPromptingGuideOpen] = useState(false);
+  const [faqOpen, setFaqOpen] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -107,6 +109,8 @@ export const Header = ({ sidebarVisible, setSidebarVisible }: HeaderProps) => {
                     onClick={() => {
                       if (link.label === "Prompting guide") {
                         setPromptingGuideOpen(true);
+                      } else if (link.label === "FAQ") {
+                        setFaqOpen(true);
                       }
                       // Handle other links here as needed
                     }}
@@ -200,6 +204,11 @@ export const Header = ({ sidebarVisible, setSidebarVisible }: HeaderProps) => {
       <PromptingGuide 
         open={promptingGuideOpen} 
         onOpenChange={setPromptingGuideOpen} 
+      />
+      
+      <FAQ 
+        open={faqOpen} 
+        onOpenChange={setFaqOpen} 
       />
     </header>
   );
