@@ -15,6 +15,7 @@ export const SettingsPanel = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [selectedProvider, setSelectedProvider] = useState<"google" | "openai">("google");
   const [selectedModel, setSelectedModel] = useState("gemini-2.0-flash-exp");
+  const [toolsOpen, setToolsOpen] = useState(true);
   const [temperature, setTemperature] = useState([1]);
   const [thinkingMode, setThinkingMode] = useState(false);
   const [thinkingBudget, setThinkingBudget] = useState(false);
@@ -277,10 +278,18 @@ export const SettingsPanel = () => {
 
         {/* Tools Section */}
         <div>
-          <div className="flex items-center justify-between mb-3">
+          <div 
+            className="flex items-center justify-between mb-3 cursor-pointer hover:bg-accent/50 rounded-md p-1 -m-1 transition-colors"
+            onClick={() => setToolsOpen(!toolsOpen)}
+          >
             <h3 className="text-sm font-medium text-foreground">Tools</h3>
-            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+            <ChevronDown 
+              className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${
+                toolsOpen ? 'rotate-0' : '-rotate-90'
+              }`} 
+            />
           </div>
+          {toolsOpen && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -908,6 +917,7 @@ export const SettingsPanel = () => {
               <Switch checked={urlContext} onCheckedChange={setUrlContext} />
             </div>
           </div>
+          )}
         </div>
 
         {/* Advanced Settings */}
