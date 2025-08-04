@@ -44,6 +44,52 @@ export const StreamSettingsPanel = () => {
 
       {/* Settings Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
+        {/* LLM Provider Section */}
+        <div>
+          <label className="text-sm font-medium text-foreground mb-2 block">
+            LLM Provider
+          </label>
+          <Select defaultValue="google">
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="google">Google AI</SelectItem>
+              <SelectItem value="openai">OpenAI</SelectItem>
+              <SelectItem value="anthropic">Anthropic</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* API Configuration Section */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-medium text-foreground">API Configuration</h3>
+            <ChevronDown className="w-4 h-4 text-muted-foreground" />
+          </div>
+          <div className="space-y-3">
+            <div>
+              <label className="text-sm text-foreground mb-1 block">API Key</label>
+              <div className="flex gap-2">
+                <input 
+                  type="password" 
+                  className="flex-1 px-3 py-2 text-sm bg-background border border-input rounded-md"
+                  placeholder="Enter your API key"
+                />
+                <Button variant="outline" size="sm">Test</Button>
+              </div>
+            </div>
+            <div>
+              <label className="text-sm text-foreground mb-1 block">Base URL (optional)</label>
+              <input 
+                type="text" 
+                className="w-full px-3 py-2 text-sm bg-background border border-input rounded-md"
+                placeholder="https://api.openai.com/v1"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Model Selection */}
         <div>
           <label className="text-sm font-medium text-foreground mb-2 block">
