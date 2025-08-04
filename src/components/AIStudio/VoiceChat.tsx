@@ -99,9 +99,9 @@ export const VoiceChat = () => {
           }
         ]}
         action={
-          <div className="space-y-6 w-full max-w-4xl">
+          <div className="space-y-6 w-full max-w-4xl mx-auto px-4">
             {/* Connection Status Card */}
-            <Card className="p-6 bg-gradient-to-br from-accent/20 to-accent/10 border border-border shadow-lg">
+            <Card className="p-6 bg-gradient-to-br from-accent/20 to-accent/10 border border-border shadow-lg">{/* ... keep existing code */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-4">
                   <div className={cn(
@@ -226,7 +226,7 @@ export const VoiceChat = () => {
                   </div>
                 </div>
 
-                <ScrollArea className="h-64 border rounded-lg p-4">
+                <ScrollArea className="h-48 sm:h-64 border rounded-lg p-4">{/* ... keep existing code */}
                   <div className="space-y-4">
                     {messages.map((message, index) => (
                       <MessageBubble key={index} message={message} />
@@ -248,8 +248,8 @@ export const VoiceChat = () => {
             )}
 
             {/* Text Input Area */}
-            <Card className="p-6 bg-gradient-to-br from-accent/20 to-accent/10 border border-border shadow-lg">
-              <div className="flex items-center gap-3">
+            <Card className="p-4 sm:p-6 bg-gradient-to-br from-accent/20 to-accent/10 border border-border shadow-lg">
+              <div className="flex flex-col sm:flex-row items-end gap-3">{/* ... keep existing code */}
                 <Textarea
                   value={textInput}
                   onChange={(e) => setTextInput(e.target.value)}
@@ -258,8 +258,8 @@ export const VoiceChat = () => {
                   rows={2}
                   disabled={!isConnected}
                 />
-                <div className="flex items-center gap-2">
-                  <TooltipProvider>
+                <div className="flex items-center gap-2 mt-3 sm:mt-0">
+                  <TooltipProvider>{/* ... keep existing code */}
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
@@ -292,11 +292,11 @@ export const VoiceChat = () => {
             </Card>
 
             {/* Enhanced Control Buttons */}
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               {/* Connect/Disconnect Button */}
               <Card 
                 className={cn(
-                  "p-6 cursor-pointer transition-all duration-200 border-2 hover:border-brand-blue/20 hover:shadow-lg",
+                  "p-4 sm:p-6 cursor-pointer transition-all duration-200 border-2 hover:border-brand-blue/20 hover:shadow-lg w-full sm:w-auto min-w-[200px]",
                   isConnected && "border-green-500/20 bg-green-500/5"
                 )}
                 onClick={isConnected ? handleDisconnect : handleConnect}
@@ -305,23 +305,23 @@ export const VoiceChat = () => {
               >
                 <div className="flex items-center gap-3">
                   <div className={cn(
-                    "p-3 rounded-lg transition-all duration-200",
+                    "p-3 rounded-lg transition-all duration-200 flex-shrink-0",
                     isConnected 
                       ? "bg-red-500 text-white" 
                       : "bg-gradient-to-br from-green-500 to-green-600 text-white"
                   )}>
                     {isConnected ? <PhoneOff className="w-6 h-6" /> : <Phone className="w-6 h-6" />}
                   </div>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-foreground">
                       {isConnected ? "Disconnect" : "Connect"}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground truncate">
                       {isConnected ? "End voice session" : "Start voice session"}
                     </p>
                   </div>
                   <ArrowRight className={cn(
-                    "w-5 h-5 text-muted-foreground transition-transform duration-200",
+                    "w-5 h-5 text-muted-foreground transition-transform duration-200 flex-shrink-0",
                     hoveredButton === "connect" && "translate-x-1"
                   )} />
                 </div>
@@ -330,7 +330,7 @@ export const VoiceChat = () => {
               {/* Record Button */}
               <Card 
                 className={cn(
-                  "p-6 cursor-pointer transition-all duration-200 border-2 hover:border-brand-blue/20 hover:shadow-lg",
+                  "p-4 sm:p-6 cursor-pointer transition-all duration-200 border-2 hover:border-brand-blue/20 hover:shadow-lg w-full sm:w-auto min-w-[200px]",
                   isRecording && "border-red-500/20 bg-red-500/5",
                   !isConnected && "opacity-50 cursor-not-allowed"
                 )}
@@ -340,23 +340,23 @@ export const VoiceChat = () => {
               >
                 <div className="flex items-center gap-3">
                   <div className={cn(
-                    "p-3 rounded-lg transition-all duration-200",
+                    "p-3 rounded-lg transition-all duration-200 flex-shrink-0",
                     isRecording 
                       ? "bg-red-500 text-white animate-pulse" 
                       : "bg-gradient-to-br from-blue-500 to-blue-600 text-white"
                   )}>
                     {isRecording ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
                   </div>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <h3 className="font-semibold text-foreground">
                       {isRecording ? "Stop Recording" : "Start Recording"}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground truncate">
                       {isRecording ? "Stop voice input" : "Begin voice input"}
                     </p>
                   </div>
                   <ArrowRight className={cn(
-                    "w-5 h-5 text-muted-foreground transition-transform duration-200",
+                    "w-5 h-5 text-muted-foreground transition-transform duration-200 flex-shrink-0",
                     hoveredButton === "record" && "translate-x-1"
                   )} />
                 </div>
