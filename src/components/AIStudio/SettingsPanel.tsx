@@ -9,10 +9,12 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Badge } from "@/components/ui/badge";
 import { X, ChevronDown, ChevronRight, Wrench, Plus, Trash2, Copy } from "lucide-react";
 import { useState } from "react";
-import { CHAT_MODELS } from "@/constants/models";
+import { LLM_PROVIDERS, MODELS_BY_PROVIDER } from "@/constants/models";
 
 export const SettingsPanel = () => {
   const [isOpen, setIsOpen] = useState(true);
+  const [selectedProvider, setSelectedProvider] = useState<"google" | "openai">("google");
+  const [selectedModel, setSelectedModel] = useState("gemini-2.0-flash-exp");
   const [temperature, setTemperature] = useState([1]);
   const [thinkingMode, setThinkingMode] = useState(false);
   const [thinkingBudget, setThinkingBudget] = useState(false);
@@ -165,17 +167,44 @@ export const SettingsPanel = () => {
 
       {/* Settings Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
+        {/* Provider Selection */}
+        <div>
+          <label className="text-sm font-medium text-foreground mb-2 block">
+            LLM Provider
+          </label>
+          <Select 
+            value={selectedProvider} 
+            onValueChange={(value: "google" | "openai") => {
+              setSelectedProvider(value);
+              // Auto-select first model of the new provider
+              const firstModel = MODELS_BY_PROVIDER[value][0].value;
+              setSelectedModel(firstModel);
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {LLM_PROVIDERS.map((provider) => (
+                <SelectItem key={provider.value} value={provider.value}>
+                  {provider.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
         {/* Model Selection */}
         <div>
           <label className="text-sm font-medium text-foreground mb-2 block">
             Model
           </label>
-          <Select defaultValue={CHAT_MODELS[0].value}>
+          <Select value={selectedModel} onValueChange={setSelectedModel}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {CHAT_MODELS.map((model) => (
+              {MODELS_BY_PROVIDER[selectedProvider].map((model) => (
                 <SelectItem key={model.value} value={model.value}>
                   {model.label}
                 </SelectItem>

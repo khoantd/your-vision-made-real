@@ -1,9 +1,25 @@
-export const CHAT_MODELS = [
-  { value: "gemini-2.0-flash-exp", label: "Gemini 2.0 Flash Experimental" },
-  { value: "gemini-1.5-pro", label: "Gemini 1.5 Pro" },
-  { value: "gemini-1.5-flash", label: "Gemini 1.5 Flash" },
-  { value: "gemini-1.0-pro", label: "Gemini 1.0 Pro" },
+export const LLM_PROVIDERS = [
+  { value: "google", label: "Google" },
+  { value: "openai", label: "OpenAI" },
 ];
+
+export const MODELS_BY_PROVIDER = {
+  google: [
+    { value: "gemini-2.0-flash-exp", label: "Gemini 2.0 Flash Experimental" },
+    { value: "gemini-1.5-pro", label: "Gemini 1.5 Pro" },
+    { value: "gemini-1.5-flash", label: "Gemini 1.5 Flash" },
+    { value: "gemini-1.0-pro", label: "Gemini 1.0 Pro" },
+  ],
+  openai: [
+    { value: "gpt-4.1-2025-04-14", label: "GPT-4.1 (2025-04-14)" },
+    { value: "o3-2025-04-16", label: "O3 (2025-04-16)" },
+    { value: "o4-mini-2025-04-16", label: "O4 Mini (2025-04-16)" },
+    { value: "gpt-4.1-mini-2025-04-14", label: "GPT-4.1 Mini (2025-04-14)" },
+    { value: "gpt-4o", label: "GPT-4o" },
+  ],
+};
+
+export const CHAT_MODELS = MODELS_BY_PROVIDER.google;
 
 export const MEDIA_MODELS = [
   {

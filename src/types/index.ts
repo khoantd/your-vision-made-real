@@ -16,7 +16,7 @@ export interface ChatMessage {
 
 export interface ModelConfig {
   name: string;
-  provider: string;
+  provider: "google" | "openai";
   temperature: number;
   maxTokens: number;
   topP: number;

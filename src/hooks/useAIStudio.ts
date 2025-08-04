@@ -3,6 +3,7 @@ import { ViewType, ModelConfig, StreamConfig, MediaGenerationConfig } from "@/ty
 
 export const useAIStudio = () => {
   const [activeView, setActiveView] = useState<ViewType>("chat");
+  const [selectedProvider, setSelectedProvider] = useState<"google" | "openai">("google");
   const [modelConfig, setModelConfig] = useState<ModelConfig>({
     name: "gemini-2.0-flash-exp",
     provider: "google",
@@ -39,9 +40,18 @@ export const useAIStudio = () => {
     setMediaConfig(prev => ({ ...prev, ...updates }));
   }, []);
 
+  const updateProvider = useCallback((provider: "google" | "openai") => {
+    setSelectedProvider(provider);
+    // Auto-select first model of the new provider
+    const firstModel = provider === "google" ? "gemini-2.0-flash-exp" : "gpt-4.1-2025-04-14";
+    setModelConfig(prev => ({ ...prev, provider, name: firstModel }));
+  }, []);
+
   return {
     activeView,
     setActiveView,
+    selectedProvider,
+    setSelectedProvider: updateProvider,
     modelConfig,
     updateModelConfig,
     streamConfig,
