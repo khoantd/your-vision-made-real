@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface ChatMessageProps {
   message: ChatMessageType;
@@ -176,7 +178,7 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
           </div>
           
           {/* Message Body */}
-          <div className="prose prose-sm max-w-none">
+          <div className="prose prose-sm max-w-none dark:prose-invert">
             {message.isLoading ? (
               <div className="flex items-center gap-3 p-3 bg-accent/20 rounded-lg">
                 <Loader2 className="w-4 h-4 animate-spin text-brand-blue" />
@@ -190,9 +192,103 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
                 </div>
               </div>
             ) : (
-              <div className="text-sm leading-relaxed whitespace-pre-wrap">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  // Custom code block styling
+                  code: ({ children, ...props }: any) => {
+                    const { className } = props;
+                    const isInline = !className || !className.includes('language-');
+                    
+                    if (isInline) {
+                      return (
+                        <code 
+                          className="bg-accent/50 text-accent-foreground px-1.5 py-0.5 rounded text-xs font-mono"
+                          {...props}
+                        >
+                          {children}
+                        </code>
+                      );
+                    }
+                    return (
+                      <pre className="bg-accent/30 border border-border rounded-lg p-4 overflow-x-auto my-4">
+                        <code className="text-sm font-mono" {...props}>
+                          {children}
+                        </code>
+                      </pre>
+                    );
+                  },
+                  // Custom blockquote styling
+                  blockquote: ({ children }: any) => (
+                    <blockquote className="border-l-4 border-brand-blue pl-4 py-2 bg-accent/20 rounded-r-lg italic my-4">
+                      {children}
+                    </blockquote>
+                  ),
+                  // Custom heading styling
+                  h1: ({ children }: any) => (
+                    <h1 className="text-lg font-bold mb-3 text-foreground">{children}</h1>
+                  ),
+                  h2: ({ children }: any) => (
+                    <h2 className="text-base font-semibold mb-2 text-foreground">{children}</h2>
+                  ),
+                  h3: ({ children }: any) => (
+                    <h3 className="text-sm font-medium mb-2 text-foreground">{children}</h3>
+                  ),
+                  // Custom list styling
+                  ul: ({ children }: any) => (
+                    <ul className="list-disc list-inside space-y-1 mb-3">{children}</ul>
+                  ),
+                  ol: ({ children }: any) => (
+                    <ol className="list-decimal list-inside space-y-1 mb-3">{children}</ol>
+                  ),
+                  li: ({ children }: any) => (
+                    <li className="text-sm">{children}</li>
+                  ),
+                  // Custom paragraph styling
+                  p: ({ children }: any) => (
+                    <p className="text-sm leading-relaxed mb-3 last:mb-0">{children}</p>
+                  ),
+                  // Custom table styling
+                  table: ({ children }: any) => (
+                    <div className="overflow-x-auto my-4">
+                      <table className="min-w-full border border-border rounded-lg">
+                        {children}
+                      </table>
+                    </div>
+                  ),
+                  th: ({ children }: any) => (
+                    <th className="border-b border-border bg-accent/30 px-4 py-2 text-left font-semibold text-sm">
+                      {children}
+                    </th>
+                  ),
+                  td: ({ children }: any) => (
+                    <td className="border-b border-border px-4 py-2 text-sm">
+                      {children}
+                    </td>
+                  ),
+                  // Custom link styling
+                  a: ({ href, children }: any) => (
+                    <a 
+                      href={href} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-brand-blue hover:underline"
+                    >
+                      {children}
+                    </a>
+                  ),
+                  // Custom strong/bold styling
+                  strong: ({ children }: any) => (
+                    <strong className="font-semibold text-foreground">{children}</strong>
+                  ),
+                  // Custom emphasis/italic styling
+                  em: ({ children }: any) => (
+                    <em className="italic">{children}</em>
+                  ),
+                }}
+              >
                 {message.content}
-              </div>
+              </ReactMarkdown>
             )}
           </div>
         </div>
