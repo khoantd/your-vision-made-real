@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Play, HelpCircle, Code, Share, RotateCcw, MoreHorizontal, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, Edit } from "lucide-react";
+import { Play, HelpCircle, Code, Share, RotateCcw, MoreHorizontal, ChevronUp, ChevronDown, ThumbsUp, ThumbsDown, Edit, X } from "lucide-react";
 import { useState } from "react";
 import { FeatureCard } from "@/components/common/FeatureCard";
 
@@ -35,6 +35,11 @@ export const ChatArea = () => {
 
   const handleRun = () => {
     setIsRunning(true);
+  };
+
+  const handleClear = () => {
+    setIsRunning(false);
+    setPrompt("Hello");
   };
 
   return (
@@ -123,6 +128,15 @@ export const ChatArea = () => {
               </Button>
               <Button size="icon" variant="ghost" className="text-muted-foreground">
                 <Code className="w-4 h-4" />
+              </Button>
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                className="text-muted-foreground hover:text-foreground"
+                onClick={handleClear}
+                title="Clear chat"
+              >
+                <X className="w-4 h-4" />
               </Button>
               <Button size="icon" variant="ghost" className="text-muted-foreground">
                 <MoreHorizontal className="w-4 h-4" />
