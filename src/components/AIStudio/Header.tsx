@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Settings, User, Menu, Sparkles, Bot, Bell, Search, HelpCircle } from "lucide-react";
+import { Settings, User, Menu, Sparkles, Bot, Bell, Search, HelpCircle, LogOut } from "lucide-react";
 import { HEADER_LINKS } from "@/constants/navigation";
 import { useAIStudio } from "@/contexts/AIStudioContext";
+import { useAuth } from "@/hooks/useAuth";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -14,7 +15,12 @@ interface HeaderProps {
 
 export const Header = ({ sidebarVisible, setSidebarVisible }: HeaderProps) => {
   const { modelConfig } = useAIStudio();
+  const { signOut, user } = useAuth();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   const getProviderIcon = () => {
     return modelConfig.provider === "openai" ? <Sparkles className="w-4 h-4" /> : <Bot className="w-4 h-4" />;
@@ -159,7 +165,25 @@ export const Header = ({ sidebarVisible, setSidebarVisible }: HeaderProps) => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>User Profile</p>
+                <p>{user?.email || 'User Profile'}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-muted-foreground hover:text-red-600 hover:bg-red-50 transition-colors"
+                  onClick={handleSignOut}
+                >
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Sign Out</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
