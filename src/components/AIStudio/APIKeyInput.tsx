@@ -1,12 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Key, CheckCircle, AlertCircle, ExternalLink } from "lucide-react";
+import { Eye, EyeOff, Key } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAIStudio } from "@/contexts/AIStudioContext";
-import { useNotifications } from "@/components/common/ToastNotifications";
-import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 
 interface APIKeyInputProps {
   provider: "openai" | "google";
@@ -17,12 +15,9 @@ export const APIKeyInput = ({
   provider,
   className 
 }: APIKeyInputProps) => {
-  const { apiKeys, updateApiKey, testApiKey } = useAIStudio();
-  const { showSuccess, showError } = useNotifications();
+  const { apiKeys, updateApiKey } = useAIStudio();
   const [showKey, setShowKey] = useState(false);
   const [isValid, setIsValid] = useState(true);
-  const [isValidating, setIsValidating] = useState(false);
-  const [hasBeenValidated, setHasBeenValidated] = useState(false);
 
   const apiKey = apiKeys[provider];
 
@@ -41,29 +36,6 @@ export const APIKeyInput = ({
     updateApiKey(provider, newValue);
     const isValidFormat = validateApiKey(newValue);
     setIsValid(newValue === "" || isValidFormat);
-    setHasBeenValidated(false); // Reset validation state when key changes
-  };
-
-  const handleValidate = async () => {
-    if (!apiKey.trim()) return;
-    
-    setIsValidating(true);
-    try {
-      const result = await testApiKey(provider, apiKey);
-      setIsValid(result);
-      setHasBeenValidated(true);
-      if (result) {
-        showSuccess("API Key Validated", "Successfully connected to AI service.");
-      } else {
-        showError("API Key Invalid", "Please check your API key and try again.");
-      }
-    } catch (error) {
-      setIsValid(false);
-      setHasBeenValidated(true);
-      showError("Validation Failed", "Failed to validate API key. Please try again.");
-    } finally {
-      setIsValidating(false);
-    }
   };
 
   const toggleVisibility = () => {
@@ -106,75 +78,39 @@ export const APIKeyInput = ({
           onChange={(e) => handleChange(e.target.value)}
           placeholder={providerInfo.placeholder}
           className={cn(
-            "pl-10 pr-16",
-            !isValid && apiKey && "border-red-500 focus:border-red-500",
-            hasBeenValidated && isValid && "border-green-500 bg-green-50/50"
+            "pl-10 pr-10",
+            !isValid && apiKey && "border-red-500 focus:border-red-500"
           )}
         />
-        <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-1">
-          {apiKey && hasBeenValidated && (
-            <>
-              {isValid ? (
-                <CheckCircle className="h-4 w-4 text-green-500" />
-              ) : (
-                <AlertCircle className="h-4 w-4 text-red-500" />
-              )}
-            </>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="absolute inset-y-0 right-0 pr-3 flex items-center"
+          onClick={toggleVisibility}
+        >
+          {showKey ? (
+            <EyeOff className="h-4 w-4 text-muted-foreground" />
+          ) : (
+            <Eye className="h-4 w-4 text-muted-foreground" />
           )}
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0"
-            onClick={toggleVisibility}
-          >
-            {showKey ? (
-              <EyeOff className="h-4 w-4 text-muted-foreground" />
-            ) : (
-              <Eye className="h-4 w-4 text-muted-foreground" />
-            )}
-          </Button>
-        </div>
+        </Button>
       </div>
       
-      <div className="flex gap-3">
-        <div className="flex-1 space-y-1">
-          {!isValid && apiKey && (
-            <p className="text-sm text-red-500">
-              Please enter a valid {provider} API key (starts with "{providerInfo.format}")
-            </p>
-          )}
-          {apiKey && isValid && hasBeenValidated && (
-            <p className="text-sm text-green-600">
-              ✓ API key validated successfully
-            </p>
-          )}
-          <p className="text-xs text-muted-foreground">
-            {providerInfo.description}
+      <div className="space-y-1">
+        {!isValid && apiKey && (
+          <p className="text-sm text-red-500">
+            Please enter a valid {provider} API key (starts with "{providerInfo.format}")
           </p>
-        </div>
-        
-        {apiKey && (
-          <Button
-            type="button" 
-            onClick={handleValidate}
-            disabled={!apiKey.trim() || isValidating || !isValid}
-            size="sm"
-            className={cn(
-              "transition-all duration-200",
-              hasBeenValidated && isValid && "bg-green-600 hover:bg-green-700"
-            )}
-          >
-            {isValidating ? (
-              <LoadingSpinner size="sm" />
-            ) : (
-              <>
-                <Key className="w-4 h-4 mr-1" />
-                {hasBeenValidated && isValid ? "Valid" : "Test"}
-              </>
-            )}
-          </Button>
         )}
+        {apiKey && isValid && (
+          <p className="text-sm text-green-600">
+            ✓ API key format looks valid
+          </p>
+        )}
+        <p className="text-xs text-muted-foreground">
+          {providerInfo.description}
+        </p>
       </div>
     </div>
   );

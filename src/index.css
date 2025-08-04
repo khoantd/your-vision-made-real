@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* AI Studio Unified Design System */
+/* AI Studio Design System - Clean, modern interface colors */
 
 @layer base {
   :root {
@@ -114,110 +114,6 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground;
   }
-
-  /* Typography scale */
-  h1 { @apply text-2xl font-semibold tracking-tight; }
-  h2 { @apply text-xl font-semibold tracking-tight; }
-  h3 { @apply text-lg font-medium; }
-  h4 { @apply text-base font-medium; }
-  
-  /* Focus styles */
-  *:focus-visible {
-    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
-  }
-}
-
-@layer components {
-  /* Unified spacing utilities */
-  .content-spacing { @apply p-6; }
-  .content-spacing-sm { @apply p-4; }
-  .content-spacing-lg { @apply p-8; }
-  
-  /* Layout utilities */
-  .main-content { @apply flex-1 bg-chat-bg flex flex-col; }
-  .page-header { @apply p-6 border-b border-border bg-background/80 backdrop-blur-sm; }
-  .content-area { @apply flex-1 overflow-hidden; }
-  
-  /* Interactive elements */
-  .interactive-hover {
-    @apply transition-colors duration-200 hover:bg-accent/50;
-  }
-  
-  /* Status indicators */
-  .status-connected { @apply bg-green-500 hover:bg-green-600; }
-  .status-connecting { @apply bg-yellow-500 hover:bg-yellow-600; }
-  .status-error { @apply bg-red-500 hover:bg-red-600; }
-  .status-idle { @apply bg-gray-500 hover:bg-gray-600; }
-}
-
-/* Enhanced Animation utilities for better UX */
-@layer utilities {
-  .animate-fade-in {
-    animation: fadeIn 0.3s ease-out;
-  }
-  
-  .animate-slide-up {
-    animation: slideUp 0.3s ease-out;
-  }
-  
-  .animate-scale-in {
-    animation: scaleIn 0.2s ease-out;
-  }
-  
-  .hover-lift {
-    @apply transition-transform duration-200 hover:scale-105;
-  }
-  
-  .focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue;
-  }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Better focus styles */
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
-  @apply focus-ring;
-}
-
-/* Improved selection colors */
-::selection {
-  background-color: hsl(var(--brand-blue) / 0.2);
-  color: hsl(var(--foreground));
-}
-
-/* Loading skeleton animation */
-@keyframes skeleton {
-  0% { opacity: 1; }
-  50% { opacity: 0.4; }
-  100% { opacity: 1; }
-}
-
-.skeleton {
-  animation: skeleton 2s ease-in-out infinite;
-  background: linear-gradient(90deg, hsl(var(--muted)) 25%, hsl(var(--muted-foreground) / 0.1) 50%, hsl(var(--muted)) 75%);
-  background-size: 200% 100%;
 }

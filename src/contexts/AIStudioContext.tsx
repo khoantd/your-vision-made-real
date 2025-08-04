@@ -19,7 +19,6 @@ interface AIStudioContextType {
     google: string;
   };
   updateApiKey: (provider: "openai" | "google", key: string) => void;
-  testApiKey: (provider: "openai" | "google", key: string) => Promise<boolean>;
 }
 
 const AIStudioContext = createContext<AIStudioContextType | undefined>(undefined);
@@ -105,39 +104,6 @@ export const AIStudioProvider: React.FC<AIStudioProviderProps> = ({ children }) 
     }
   }, [modelConfig.provider, updateModelConfig]);
 
-  const testApiKey = useCallback(async (provider: "openai" | "google", key: string): Promise<boolean> => {
-    try {
-      console.log(`Testing API key for ${provider}...`);
-      
-      if (provider === "openai") {
-        // Validate format first
-        if (!key.startsWith("sk-") || key.length < 40) {
-          console.error("Invalid OpenAI API key format");
-          return false;
-        }
-        
-        const response = await fetch("https://api.openai.com/v1/models", {
-          headers: {
-            "Authorization": `Bearer ${key}`,
-            "Content-Type": "application/json"
-          }
-        });
-        
-        const result = response.ok;
-        console.log(`API key test result for ${provider}:`, result);
-        return result;
-      } else if (provider === "google") {
-        // Basic validation for Google API key format
-        return key.startsWith("AIza") && key.length > 20;
-      }
-      
-      return false;
-    } catch (error) {
-      console.error(`API key test failed for ${provider}:`, error);
-      return false;
-    }
-  }, []);
-
   // Load settings when user logs in
   useEffect(() => {
     if (user) {
@@ -186,7 +152,6 @@ export const AIStudioProvider: React.FC<AIStudioProviderProps> = ({ children }) 
     updateOpenAIConfig,
     apiKeys,
     updateApiKey,
-    testApiKey,
   };
 
   return (

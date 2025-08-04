@@ -1,17 +1,13 @@
 import { useState, useCallback, useRef } from "react";
 import { ChatMessage, ChatState, ModelConfig } from "@/types";
 import { OpenAIService } from "@/lib/openai";
-import { conversationService, Conversation } from "@/services/conversationService";
-import { useAuth } from "@/hooks/useAuth";
 
 export const useChat = (modelConfig: ModelConfig) => {
-  const { user } = useAuth();
   const [chatState, setChatState] = useState<ChatState>({
     messages: [],
     isLoading: false,
     error: null,
   });
-  const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
 
   const openaiServiceRef = useRef<OpenAIService | null>(null);
 
@@ -62,32 +58,11 @@ export const useChat = (modelConfig: ModelConfig) => {
       initializeOpenAI(apiKey);
     }
 
-    // Create or get conversation if user is authenticated
-    let conversation = currentConversation;
-    if (user && !conversation) {
-      try {
-        const title = conversationService.generateConversationTitle([{ content, role: 'user' } as any]);
-        conversation = await conversationService.createConversation(title, modelConfig);
-        setCurrentConversation(conversation);
-      } catch (error) {
-        console.error('Failed to create conversation:', error);
-      }
-    }
-
     // Add user message
     addMessage({
       content,
       role: "user",
     });
-
-    // Save user message to database if conversation exists
-    if (user && conversation) {
-      try {
-        await conversationService.addMessage(conversation.id, 'user', content);
-      } catch (error) {
-        console.error('Failed to save user message:', error);
-      }
-    }
 
     // Add loading assistant message
     const loadingMessageId = Date.now().toString();
@@ -160,18 +135,9 @@ export const useChat = (modelConfig: ModelConfig) => {
           assistantResponse += chunk;
           updateLastMessage({ content: assistantResponse, isLoading: false });
         },
-        async () => {
+        () => {
           console.log("Stream completed");
           setChatState(prev => ({ ...prev, isLoading: false }));
-          
-          // Save assistant message to database if conversation exists
-          if (user && conversation && assistantResponse) {
-            try {
-              await conversationService.addMessage(conversation.id, 'assistant', assistantResponse);
-            } catch (error) {
-              console.error('Failed to save assistant message:', error);
-            }
-          }
         },
         (error) => {
           console.error("OpenAI API Error:", error);
@@ -199,7 +165,7 @@ export const useChat = (modelConfig: ModelConfig) => {
         isLoading: false 
       });
     }
-  }, [chatState.messages, modelConfig, addMessage, updateLastMessage, initializeOpenAI, user, currentConversation]);
+  }, [chatState.messages, modelConfig, addMessage, updateLastMessage, initializeOpenAI]);
 
   const clearChat = useCallback(() => {
     setChatState({
@@ -207,7 +173,6 @@ export const useChat = (modelConfig: ModelConfig) => {
       isLoading: false,
       error: null,
     });
-    setCurrentConversation(null);
   }, []);
 
   const removeMessage = useCallback((messageId: string) => {
@@ -217,49 +182,13 @@ export const useChat = (modelConfig: ModelConfig) => {
     }));
   }, []);
 
-  const loadConversation = useCallback(async (conversationId: string) => {
-    try {
-      const conversation = await conversationService.getConversation(conversationId);
-      if (conversation) {
-        setCurrentConversation(conversation);
-        
-        // Convert conversation messages to chat messages
-        const chatMessages: ChatMessage[] = conversation.messages?.map(msg => ({
-          id: msg.id,
-          content: msg.content,
-          role: msg.role,
-          timestamp: new Date(msg.created_at),
-        })) || [];
-
-        setChatState({
-          messages: chatMessages,
-          isLoading: false,
-          error: null,
-        });
-      }
-    } catch (error) {
-      console.error('Failed to load conversation:', error);
-      setChatState(prev => ({
-        ...prev,
-        error: 'Failed to load conversation',
-      }));
-    }
-  }, []);
-
-  const newConversation = useCallback(() => {
-    clearChat();
-  }, [clearChat]);
-
   return {
     chatState,
-    currentConversation,
     sendMessage,
     addMessage,
     updateLastMessage,
     clearChat,
     removeMessage,
     initializeOpenAI,
-    loadConversation,
-    newConversation,
   };
 }; 
