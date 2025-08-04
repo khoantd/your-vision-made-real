@@ -50,7 +50,7 @@ const quickPrompts = [
 
 export const ChatArea = () => {
   const { modelConfig, apiKeys } = useAIStudio();
-  const { chatState, sendMessage, clearChat } = useChat(modelConfig);
+  const { chatState, sendMessage, clearChat, loadConversation, currentConversation } = useChat(modelConfig);
   const [prompt, setPrompt] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
@@ -81,6 +81,15 @@ export const ChatArea = () => {
     window.addEventListener('newChat', handleNewChat);
     return () => window.removeEventListener('newChat', handleNewChat);
   }, []);
+
+  // Check for conversation to load from history
+  useEffect(() => {
+    const loadConversationId = sessionStorage.getItem('loadConversationId');
+    if (loadConversationId) {
+      sessionStorage.removeItem('loadConversationId');
+      loadConversation(loadConversationId);
+    }
+  }, [loadConversation]);
 
   // Auto-resize textarea with smooth animation
   useEffect(() => {

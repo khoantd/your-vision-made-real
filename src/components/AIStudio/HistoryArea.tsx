@@ -213,11 +213,26 @@ export const HistoryArea = () => {
     }
   };
 
-  const handleLoadConversation = (conversationId: string) => {
-    // Switch to chat view and load the conversation
-    setActiveView('chat');
-    // The conversation loading will be handled by the ChatArea component
-    // We can pass the conversation ID via URL or context
+  const handleLoadConversation = async (conversationId: string) => {
+    try {
+      // Switch to chat view
+      setActiveView('chat');
+      
+      // Store the conversation ID to be loaded by ChatArea
+      sessionStorage.setItem('loadConversationId', conversationId);
+      
+      toast({
+        title: "Loading conversation",
+        description: "Switching to chat view...",
+      });
+    } catch (error) {
+      console.error('Failed to load conversation:', error);
+      toast({
+        title: "Error", 
+        description: "Failed to load conversation",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleDeleteConversation = async (conversationId: string) => {
