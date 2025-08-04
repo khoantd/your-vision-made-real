@@ -99,7 +99,7 @@ export const VoiceChat = () => {
           }
         ]}
         action={
-          <div className="space-y-6 w-full max-w-4xl mx-auto px-4">
+          <div className="space-y-6 w-full max-w-4xl">
             {/* Connection Status Card */}
             <Card className="p-6 bg-gradient-to-br from-accent/20 to-accent/10 border border-border shadow-lg">{/* ... keep existing code */}
               <div className="flex items-center justify-between mb-4">
