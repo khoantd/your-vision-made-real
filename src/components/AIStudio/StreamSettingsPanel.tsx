@@ -2,11 +2,23 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Separator } from "@/components/ui/separator";
 import { X, ChevronDown, Wrench } from "lucide-react";
 import { useState } from "react";
+import { LLM_PROVIDERS } from "@/constants/models";
+import { useAIStudio } from "@/contexts/AIStudioContext";
+import { APIKeyInput } from "./APIKeyInput";
+import { DynamicModelSelector } from "./DynamicModelSelector";
 
 export const StreamSettingsPanel = () => {
+  const { 
+    modelConfig, 
+    updateModelConfig
+  } = useAIStudio();
+  
   const [isOpen, setIsOpen] = useState(true);
+  const [apiConfigOpen, setApiConfigOpen] = useState(true);
   const [turnCoverage, setTurnCoverage] = useState(false);
   const [affectiveDialog, setAffectiveDialog] = useState(false);
   const [proactiveAudio, setProactiveAudio] = useState(false);
@@ -44,50 +56,48 @@ export const StreamSettingsPanel = () => {
 
       {/* Settings Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        {/* LLM Provider Section */}
+        {/* API Configuration */}
+        <Collapsible open={apiConfigOpen} onOpenChange={setApiConfigOpen}>
+          <CollapsibleTrigger className="flex items-center justify-between w-full mb-3 cursor-pointer hover:bg-accent/50 rounded-md p-1 -m-1 transition-colors">
+            <h3 className="text-sm font-medium text-foreground">API Configuration</h3>
+            <ChevronDown 
+              className={`w-4 h-4 text-muted-foreground transition-transform duration-200 ${
+                apiConfigOpen ? 'rotate-0' : '-rotate-90'
+              }`} 
+            />
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div className="space-y-4">
+              <APIKeyInput provider="openai" />
+              <APIKeyInput provider="google" />
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+
+        <Separator />
+
+        {/* Provider Selection */}
         <div>
           <label className="text-sm font-medium text-foreground mb-2 block">
             LLM Provider
           </label>
-          <Select defaultValue="google">
+          <Select 
+            value={modelConfig.provider} 
+            onValueChange={(value: "google" | "openai") => {
+              updateModelConfig({ provider: value });
+            }}
+          >
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="google">Google AI</SelectItem>
-              <SelectItem value="openai">OpenAI</SelectItem>
-              <SelectItem value="anthropic">Anthropic</SelectItem>
+              {LLM_PROVIDERS.map((provider) => (
+                <SelectItem key={provider.value} value={provider.value}>
+                  {provider.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
-        </div>
-
-        {/* API Configuration Section */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-medium text-foreground">API Configuration</h3>
-            <ChevronDown className="w-4 h-4 text-muted-foreground" />
-          </div>
-          <div className="space-y-3">
-            <div>
-              <label className="text-sm text-foreground mb-1 block">API Key</label>
-              <div className="flex gap-2">
-                <input 
-                  type="password" 
-                  className="flex-1 px-3 py-2 text-sm bg-background border border-input rounded-md"
-                  placeholder="Enter your API key"
-                />
-                <Button variant="outline" size="sm">Test</Button>
-              </div>
-            </div>
-            <div>
-              <label className="text-sm text-foreground mb-1 block">Base URL (optional)</label>
-              <input 
-                type="text" 
-                className="w-full px-3 py-2 text-sm bg-background border border-input rounded-md"
-                placeholder="https://api.openai.com/v1"
-              />
-            </div>
-          </div>
         </div>
 
         {/* Model Selection */}
@@ -95,16 +105,11 @@ export const StreamSettingsPanel = () => {
           <label className="text-sm font-medium text-foreground mb-2 block">
             Model
           </label>
-          <Select defaultValue="gemini-2.5-flash-preview">
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="gemini-2.5-flash-preview">Gemini 2.5 Flash Preview Native Audio Dialog</SelectItem>
-              <SelectItem value="gemini-2.0-flash">Gemini 2.0 Flash</SelectItem>
-              <SelectItem value="gemini-1.5-pro">Gemini 1.5 Pro</SelectItem>
-            </SelectContent>
-          </Select>
+          <DynamicModelSelector
+            provider={modelConfig.provider}
+            selectedModel={modelConfig.name}
+            onModelChange={(modelId) => updateModelConfig({ name: modelId })}
+          />
         </div>
 
         {/* Voice */}
